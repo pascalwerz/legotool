@@ -15,11 +15,11 @@ typedef struct _mapping mapping;
 
 // mapping between a LABEL and a KEY.
 // label is the label name
-// key is the hash, normally key = FNV1UppercaseStringHash32(label), BUT it can be overriden so key is not completely predictable.
+// key is the hash, normally key = FNV1UppercaseStringHash32(label), BUT might be overriden so key is not completely predictable.
 // string, if not empty, is a human readable text, mostly extracted from TEXT.CSV and maybe other data files (probably extracted by quickBMS)
 // game, saveItemID specify where this mapping is used
 // flags, FLAGS_FINAL, means that the human readable string shouldn't not be updated by automated tools.
-//        FLAGS_OVERRIDE, means this is a required override, key!=FNV1UppercaseStringHash32(label)
+//        FLAGS_OVERRIDE, means this is a required override, i.e. key != FNV1UppercaseStringHash32(label)
 //        flags can be ORed
 // redirection, if not NULL redirects human readable string to specified label (1 redirection level ONLY).
 typedef struct _mapping { uintmax_t key; uintmax_t game; uintmax_t saveItemID; uintmax_t flags; char *label; char *string; char *redirection; } mapping;

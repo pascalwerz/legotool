@@ -29,6 +29,8 @@
 //	** Version history: **
 //	Version	Date			Comment
 //
+//							for batman3, MainCoinTotal now changed in "CoinsVariables" instead of "Coins" saveItem
+//							removed overrides
 //	0.3.3	14-NOV-2018		renamed chunks to saveItems and minor adjustments
 //	0.3.2	04-NOV-2018		small enhancements
 //	0.3.1	31-OCT-2018		minor corrections
@@ -173,7 +175,7 @@ for (int i = 0; i < context->knownIDsCount; i++)
 			if (!headerPrinted)
 				{
 				printf("non-matching key/non-empty-label pairs:\n");
-				printf("*** in src/ids/*/overrides.c required overrides should have flags |= 0x%jx ***\n", (uintmax_t) FLAGS_OVERRIDE);
+				printf("*** overrides should have flags |= 0x%jx ***\n", (uintmax_t) FLAGS_OVERRIDE);
 				headerPrinted = 1;
 				}
 			printID(&context->knownIDs[i]);
@@ -209,7 +211,7 @@ fprintf(stderr, "usage: %s -g gameName [options] file\n", myBasename);
 fprintf(stderr, "         or:\n");
 fprintf(stderr, "       %s [-A|-N|-S]\n", myBasename);
 fprintf(stderr, "           options:\n");
-fprintf(stderr, "       -c value            set Coins:MainCoinTotal to given value\n");
+fprintf(stderr, "       -c value            set Coins[Variables]:MainCoinTotal to given value\n");
 fprintf(stderr, "       -d                  dump saveItems (after any modification)\n");
 fprintf(stderr, "       -D saveItem         dumps only given kind of saveItem\n");
 fprintf(stderr, "                               saveItem may be any name or a %%0x key\n");
@@ -657,7 +659,7 @@ for (loadDataAtEnd = 0; loadDataAtEnd == 0; )
 		// (most automatic first, giving precedence to most manual ones)
 		if (context.willRefillAll)        if (forEachSaveItemWithName(&context, refillAllProps,  context.willRefillQuantity,     "Items") == INVALID_DATA) { fprintf(stderr, "error: file format not as expected.\n"); exit(1); }
 		if (context.willRefillMineOnly)   if (forEachSaveItemWithName(&context, refillMyProps,   context.willRefillQuantity,     "Items") == INVALID_DATA) { fprintf(stderr, "error: file format not as expected.\n"); exit(1); }
-		if (context.willSetCoins)         if (forEachSaveItemWithName(&context, setCoins,        context.willSetCoinsValue,      "Coins") == INVALID_DATA) { fprintf(stderr, "error: file format not as expected.\n"); exit(1); }
+		if (context.willSetCoins)         if (forEachSaveItemWithName(&context, setCoins,        context.willSetCoinsValue,      (context.game == gameBatman3) ? "CoinsVariables" : "Coins") == INVALID_DATA) { fprintf(stderr, "error: file format not as expected.\n"); exit(1); }
 		if (context.willZapValue)         if (forEachSaveItem(&context, zap, (uintmax_t) context.willZapString) == INVALID_DATA) { fprintf(stderr, "error: file format not as expected.\n"); exit(1); }
 
 		// actions after all modifications have been done
