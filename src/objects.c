@@ -24,7 +24,7 @@
 
 
 
-uintmax_t objectSizeOf(context_t *context)
+uintmax_t objectSize(context_t *context)
 {
 	switch(context->saveItemObjectVersion)
 		{
@@ -272,11 +272,11 @@ uintmax_t forAllObjectsWithObjectIDAndFieldID(context_t *context, forAllFunction
 	uintmax_t fieldCount;
 
 
-	fieldCount = context->saveItemDataSize / objectSizeOf(context);
+	fieldCount = context->saveItemDataSize / objectSize(context);
 
 	for (uintmax_t i = 0; i < fieldCount; i++)
 		{
-		field = (object_t *) (context->fileData + context->saveItemDataOffset + i * objectSizeOf(context));
+		field = (object_t *) (context->fileData + context->saveItemDataOffset + i * objectSize(context));
 		if (objectObject(context, field) == objectID || objectID == ID_WILDCARD)
 			{
 			switch (context->saveItemObjectVersion)
@@ -328,10 +328,10 @@ object_t *findObjectForObjectIDAndFieldID(context_t *context, uintmax_t objectID
 	object_t *field;
 
 
-	fieldCount = context->saveItemDataSize / objectSizeOf(context);
+	fieldCount = context->saveItemDataSize / objectSize(context);
 	for (uintmax_t i = 0; i < fieldCount; i++)
 		{
-		field = (object_t *) (context->fileData + context->saveItemDataOffset + i * objectSizeOf(context));
+		field = (object_t *) (context->fileData + context->saveItemDataOffset + i * objectSize(context));
 		if (objectObject(context, field) == objectID && objectField(context, field) == fieldID)
 			return field;
 		}

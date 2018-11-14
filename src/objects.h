@@ -17,7 +17,7 @@ typedef enum
 // opaque because you shouldn't access members directly
 typedef struct _object_t object_t;
 // and because it's opaque you can't sizeof() it, so use this instead (ugly indeed):
-uintmax_t objectSizeOf(context_t *context);
+uintmax_t objectSize(context_t *context);
 
 
 // getters/setters

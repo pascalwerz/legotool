@@ -149,10 +149,10 @@ uintmax_t dumpFormatted(context_t *context)
 	formatLength = strlen(format);
 	formatIndex = 0;
 
-	count = context->saveItemDataSize / (objectSizeOf(context) * 1);
+	count = context->saveItemDataSize / (objectSize(context) * 1);
 	for (uintmax_t i = 0; i < count; i++)
 		{
-		field = (object_t *)(context->fileData + context->saveItemDataOffset + (1 * i + 0) * objectSizeOf(context));
+		field = (object_t *)(context->fileData + context->saveItemDataOffset + (1 * i + 0) * objectSize(context));
 
 		if (formatIndex == 0 && i != 0 && formatLength > 1)
 			printf("\n");
