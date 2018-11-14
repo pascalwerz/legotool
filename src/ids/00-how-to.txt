@@ -1,0 +1,274 @@
+# HOW TO:
+# Foreword: the process described below may/will need to be:
+# - adjusted
+# - re-run again and again
+# - etc.
+
+# ***** About file path *****
+# There are cases were file path are stored as hash (Lego Worlds LXFMLModels)
+# It may be tricky to find the path back from the hash.
+# First of all, all GAME*.DAT and DLC*.DAT contained files are 'mapped' at the root of the
+# data files filesystem. So file a/b/c in GAME.DAT appears at ./a/b/c and file d/e/f in DLC1.DAT
+# is mapped to ./d/e/f
+# To avoid collisions, DLC files hierarchy starts with a unique root prefix such as
+# AdditionalContent/<SomeUniqueNameHere>/ or __DLC7__/
+# File paths are then expressed relative to their root directory: files in GAME*.DAT are
+# ./path/to/file and files in DLC*.DAT are DLC/ROOT/./path/to/file
+# This was be verified in LEGO Worlds' LXFMLModels
+# A common issue is that the path separator / sometimes is replaced by \
+# And don't forget that in C and most shells, \ is escaped as \\
+
+
+# let's start, set up environment
+cd "/Volumes/Disque/develop/L/legotool"  # the legotool/hash/rhash folder
+GAME=worlds                              # a directory name for the game
+DATA="datas/${GAME}"                     # "/path/to/uncompressed/game/data/files"
+SAVE="saves/${GAME}"                     # a directory containing a game's savegamedata slot content
+
+# create some (empty) directories/files
+mkdir -p src/ids/${GAME}
+mkdir -p datas/${GAME}
+mkdir -p saves/${GAME}
+if [ ! -f src/ids/${GAME}/ids.c ]; then echo '/* this file is part of legotool, by xvi */' > src/ids/${GAME}/ids.c; fi
+
+# uncompress the DATA* and DLC* file, using quickBMS or similar
+# put result in "datas/${GAME}" directory
+# each .DAT archive has to be put in a similar-named directory. e.g. GAME.DAT into GAME/
+
+# get a complete saved game, put it in "saves/${GAME}" directory
+
+# clean files
+# ONLY IF STARTING FROM FRESH
+# do not clean these files when appending a new game
+#       rm -f dictionary.txt
+
+# these are cleared for each new game
+rm -f textfiles.txt
+rm -f csvfiles.txt
+
+
+# find states name
+find "$DATA" -iname '*.txt' -print0 | xargs -0 cat -- | grep -wi states | sed -e's/.*[sS][tT][aA][tT][eE][sS]\(.*\)/\1/' | bbedit
+# remove comment: replace pattern "//.*$" with ""
+# remove leading whitespaces: replace pattern "^\s+" with ""
+# remove lines that do not look adequate
+# split in single words: replace pattern "\s+" with "\n"
+# remove duplicates
+# clean up
+# append to states.txt
+# manually edit, CamelCase, cleanup etc.
+# append computed hashes to ids/common/states.c
+bbedit src/ids/common/states.c
+# remove duplicates in src/ids/common/states.c
+# save src/ids/common/states.c
+# close src/ids/common/states.c
+
+# find all csv files
+find "$DATA" -type f \( -iname '*.csv' \) > csvfiles.txt
+# remove non-text file candidates
+cat csvfiles.txt | while read FILE; do file "$FILE" ; done | grep -v ": ASCII text" | grep -v ": UTF-8 Unicode"| bbedit
+# verify listed files, if any, remove them from csvfiles.txt if needed or if they contains really useless text
+bbedit csvfiles.txt
+
+# extract useful words from csv files
+cat csvfiles.txt | while read FILE; do bbedit "$FILE"; done
+# copy/append useful content line to a new file
+# beware, some will need to have their first column removed
+# beware of INVALID characters especially in TEXT.CSV (replace '[\x00-\x09\x0b-\x1f]+' with '')
+# beware of INVALID lines especially in TEXT.CSV (replace '(^[^"].*\n)+' with '')
+# keep only first column (the label): replace pattern "^(.*?),.*$" with "\1"
+# remove prefix/suffix '"'
+# remove duplicates
+# append to words/${GAME}.txt
+bbedit words/${GAME}.txt
+# remove duplicates
+# save words/${GAME}.txt
+# close words/${GAME}.txt
+
+# find all text file candidates
+find "$DATA" -type f \(  -iname '*.addtool' -o -iname '*.cfg' -o -iname '*.json' -o -iname '*.sf' -o -iname '*.sub' -o -iname '*.txt' -o -iname '*.txc' -o -iname '*.xml' \) > textfiles.txt
+
+# remove non-text file candidates
+cat textfiles.txt | while read FILE; do file "$FILE" ; done | grep -v "ASCII text" | grep -v ": UTF-8 Unicode" | bbedit
+# verify listed files, if any, remove them from textfiles.txt if needed or if they contains really useless text
+bbedit textfiles.txt
+# save textfiles.txt
+# close textfiles.txt
+
+# this step is only required if file path are included as hash (e.g. lego worlds for .LXFML files). You may want to skip it otherwise
+# create files path file
+touch words/files/${GAME}.txt
+# get all files path, with both / and \ separators, with and without extension, with and without _DX## suffix
+(cd "$DATA"; for i in *; do (cd "$i"; find . ! -type d ! -name '.DS_Store'; find * ! -type d ! -name '.DS_Store'); done; for i in [dD][lL][cC]*; do (cd "$i"; find */*/. ! -type d ! -name '.DS_Store'); done) | awk '{ printf("%s\n", $0); gsub("/", "\\"); printf("%s\n", $0); }' | awk '{ print $0; n=split($0,w,"."); for (i=1;i<n; i++)printf("%s.",w[i]); printf("%s\n",w[n]) }' | awk '{ print $0; sub("\.DX[0-9]*$", ""); print $0 }'| sort -fu | bbedit
+# get all directories path with both / and \ separators, with and without trailing / and \, with and without extension, with and without DX## suffix
+(cd "$DATA"; for i in *; do (cd "$i"; find . -type d; find * -type d); done; for i in [dD][lL][cC]*; do (cd "$i"; find */*/. -type d); done) | awk '{ printf("%s\n", $0); printf("%s/\n", $0); gsub("/", "\\"); printf("%s\n", $0); printf("%s\\\n", $0); }' | awk '{ print $0; n=split($0,w,"."); for (i=1;i<n; i++)printf("%s.",w[i]); printf("%s\n",w[n]) }' | awk '{ print $0; sub("\.DX[0-9]*$", ""); print $0 }'| sort -fu | bbedit
+# merge both into words/files/${GAME}.txt
+bbedit words/files/${GAME}.txt
+# remove duplicates
+# save words/files/${GAME}.txt
+# close words/files/${GAME}.txt
+
+# get all words of all known text files:
+# ********* IMPORTANT: please let the window that will open (bbedit words.txt) frontmost until done *********
+bbedit words.txt; cat textfiles.txt | while read FILE; do (cat "$FILE"; echo) | bbedit --append; done
+# remove duplicates
+# replace following patterns:
+#    pattern "[^-a-z0-9_/\.\\\n]+" with " "
+#    pattern "//+" with " "
+#    pattern "-+" with "-"
+#    pattern "^\s+" with ""
+#    pattern "\s+$" with ""
+#    remove duplicates
+#    separate words: replace pattern " +" with "\n"
+# remove duplicates
+# append to words/${GAME}.txt
+bbedit words/${GAME}.txt
+# remove duplicates
+# save words/${GAME}.txt
+# close words/${GAME}.txt
+
+# check for overridden labels
+cat textfiles.txt | while read FILE; do if grep -q "^\0: [0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f] [^ ]*" "$FILE"; then cat "$FILE"; fi; done | cut -d' ' -f2- | while read LINE; do HASH=$(echo $LINE | cut -d' ' -f1); LABEL=$(echo $LINE | cut -d' ' -f2-); COMPUTED=$(./hash -x "$LABEL"); if [ $COMPUTED != $HASH ]; then printf "{ 0x%s, gameAny, -1, 0x2, \"%s\", \"\", NULL }, \n" $HASH "$LABEL"; fi; done | sort -fu | bbedit
+# verify generated lines, if any
+
+# copy text from adequate Hopper Disassembler string section
+# paste in a new bbedit text document
+# extract lines containing pattern ' db         "'
+# dismiss original bbedit text document
+# replace pattern '^[0-9a-f]+ +db         "' with ''
+# replace pattern '", 0.*$' with ''
+# remove duplicates
+# replace pattern '%s' with '\n'
+# remove lines containing pattern '["%@&:?]'
+# append to words/${GAME}.txt
+bbedit words/${GAME}.txt
+# remove duplicates
+# save words/${GAME}.txt
+# close words/${GAME}.txt
+
+# append stock of words to dictionary.txt:
+# **** if you want only some of these files to be included (to avoid dictionary growing too large), manually append them instead ****
+cat words/${GAME}.txt >> dictionary.txt
+# if wanted, add the file paths. This makes the dictionary huge.
+cat words/files/${GAME}.txt >> dictionary.txt
+bbedit dictionary.txt
+# remove duplicates
+# save dictionary.txt
+# close dictionary.txt
+
+# you may want to append a generic words list to dictionary.txt (but this will make reverse looking hashes longer)
+#    cat /some/other/generic/words/file >> dictionary.txt
+#    remove duplicates in dictionary.txt
+
+# generate dictionary.c needed for rhash.
+cat dictionary.txt | sed -e's:\\:\\\\:g' -e's:":\\":g' | awk '{ printf("%s%c", $0, 0); }' | xargs -0 -n500 ./hash -- > dictionary.c
+
+# update all binaries
+# compiler may fail when dictionary is too large
+make
+
+# update list of generated files in src/ids/globalKnownIDs.c
+bbedit src/ids/globalKnownIDs.c
+# limit included files to common and files for the game
+
+# dump a saved game file, including empty saveItems, with name lookup
+./00-do.sh -z -g ${GAME} -d "$SAVE" | bbedit
+# append new saveItem mappings to src/ids/01-common/saveItems.c
+bbedit src/ids/01-common/saveItems.c
+# append new cheats mappings to src/ids/01-common/cheats.c
+bbedit src/ids/01-common/cheats.c
+# append new coins mappings to src/ids/01-common/coins.c
+bbedit src/ids/01-common/coins.c
+# append new metrics mappings to src/ids/01-common/metrics.c
+bbedit src/ids/01-common/metrics.c
+# declare/update rules[] for this game
+bbedit src/saveItems.c
+
+# update tools
+make
+
+# dump a saved game file, excluding empty saveItems, without name lookup
+./00-do.sh -n -g ${GAME} -d "$SAVE" | bbedit
+# extract hashs to src/ids/${GAME}/ids.c
+bbedit src/ids/${GAME}/ids.c
+
+# from last dump output, copy to a new file lines containing pattern '\.[0-9a-f]{8}'
+# keep the "field" part
+# remove duplicates
+# append new fields mappings found to src/ids/01-common/fields.c
+bbedit src/ids/01-common/fields.c
+
+# from last dump output, copy to a new file lines containing pattern '\.[0-9a-f]{8}'
+# keep the "value" part
+# remove duplicates
+# append new states mappings found to src/ids/01-common/states.c
+bbedit src/ids/01-common/states.c
+
+# from last dump output, copy to a new file lines containing pattern '[0-9a-f]{8}\.'
+# keep the "object" part
+# remove duplicates
+# extract objects hashs to src/ids/${GAME}/ids.c
+bbedit src/ids/${GAME}/ids.c
+# close last dump output
+# dump a saved game file, excluding empty saveItems, with name lookup
+./00-do.sh -z -g ${GAME} -d "$SAVE" | bbedit
+
+# when matches were found, you should add them into words/${GAME}.txt, and also add the prefix/suffix they show
+bbedit words/${GAME}.txt
+
+# check the completeness of a dumped saved game
+
+# update list of generated files in src/ids/globalKnownIDs.c
+# re-enable all other games includes
+bbedit src/ids/globalKnownIDs.c
+
+
+
+
+##### additional tips
+
+# A very powerful way (near 100% hit) to find collectable (such as Bricks, Tokens, Perils, StoryComplete and the special syntax of Customiser collectables etc.) names is:
+echo -n "" > /tmp/collectables.txt
+cat textfiles.txt | while read FILE; do cat "$FILE" | awk -v Level="$(basename $(dirname "$FILE"))" '{if ($1 == "InstanceName") { InstanceName = $2; } else if ($1 == "Level" && $2 != "None" ) { Level = $2; } else if ($1 == "TypeName") { TypeName = $2; } else if ($1 == "CollectableEnd") { system(sprintf("./hash %s_%s", Level, InstanceName)); } }'; done >> /tmp/collectables.txt
+cat textfiles.txt | while read FILE; do cat "$FILE" | awk -v Level="$(basename "$FILE" | sed s'/^\(.*\)\..*$/\1/')" '{if ($1 == "InstanceName") { InstanceName = $2; } else if ($1 == "Level" && $2 != "None" ) { Level = $2; } else if ($1 == "TypeName") { TypeName = $2; } else if ($1 == "CollectableEnd") { system(sprintf("./hash %s_%s", Level, InstanceName)); } }'; done >> /tmp/collectables.txt
+cat textfiles.txt | while read FILE; do cat "$FILE" | awk '{ FS="[=\x22\x27]+"; sub("^[ \x09]+", ""); if ($1 == "resource_pool_start") { resource_pool = $2 } else if ($1 == "resource_path") { resource_path = $2; gsub("\\\\", "\\\\", resource_path);  string=sprintf("./hash \"%s|%s\"", resource_pool, resource_path); system(string); } }'; done >> /tmp/collectables.txt
+bbedit /tmp/collectables.txt
+# remove duplicates from /tmp/collectables.txt
+# CamelCase, cleanup, etc.
+# save /tmp/collectables.txt
+# close /tmp/collectables.txt
+# compare with src/ids/${GAME}/ids.c
+cat src/ids/${GAME}/ids.c | while read LINE; do echo "$LINE" | grep '^{ 0x' | grep -q '"", "", NULL },$'; STATUS=$?; if [ $STATUS -eq 0 ]; then HASH=$(echo $LINE | awk '{print substr($2, 3, 8)}'); grep -q $HASH /tmp/collectables.txt; if [ $? -eq 0 ]; then grep $HASH /tmp/collectables.txt; else ./rhash -1 $HASH | sed s'/^  0 //' | awk '/./ {print $0}'; fi; else echo "$LINE"; fi; done | bbedit
+# replace pattern "\\" with "\\\\"
+# compare with src/ids/${GAME}/ids.c
+bbedit src/ids/${GAME}/ids.c
+# update src/ids/${GAME}/ids.c
+# save src/ids/${GAME}/ids.c
+# close src/ids/${GAME}/ids.c
+
+# search files for interesting content that will reveal saveItem ids or object ids
+# e.g.:
+# CHECKPOINTS.TXT reveals checkpoints names, and their states
+# CHEATS*.TXT reveals cheats (i.e. items of the 'extras' menu) names
+# GALAXYMAPDESTINATIONS.TXT reveals GalaxyMapDestinations
+
+# finding LXFMLs:
+find $DATA -ipath '*/LXFML/MODELS/*/INDEXEDCONTENTS.TXT' -print0 | xargs -0 bbedit
+# locate "File .*\.LXFML" lines
+# append each of the .*.LXFML to the path that may be deduced from the file's directory name, remember the syntax leading "./" or "ADDITIONALCONTENT/*/./"
+
+# windbg: on Windows the MOST useful source for dictionary.txt, but the LESS funny. Does anyone actually use this debugger?
+# create directory c:\logs
+# launch game, prepare to load a game
+# rung windbg manually with options "-logo c:\path\to\some\log\file": "C:\Program Files (x86)\Windows Kits\10\Debuggers\x86\windbg.exe" -logo "C:\logs\windbg.log"
+# File/Attach to a Process...
+# list modules: lm
+# identify the right one, note its range
+# locate the initial FNV seed: s <range of binary> c5 9d 1c 81
+# View/Disassembly: disassemble a few bytes before first good looking match
+# find called routine just at the top: this is the FNV hash routine
+# find in this routine address of instruction to break, note which register points to the string
+# set breakpoint: bp <instruction address> "da/c100 <register>;g"
+# load file
+# get the log file
+# when importing the log file, don't forget to change line endings from CRLF to LF. Why are these line endings still used?

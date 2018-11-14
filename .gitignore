@@ -1,0 +1,20 @@
+# first, ignore all…
+/*
+
+# then, add included files/folders
+!/.gitignore
+!/src
+!/src/*
+!/src/**/*.c
+!/src/**/*.h
+!/src/**/*.txt
+!/Makefile
+!/00-do.sh
+!/01-hash-pics.sh
+!/README.md
+!/savegame shell file format.md
+!/About Lego's FNV hash.md
+!/LICENSE
+
+# then ignore Finder file
+**/.DS_Store
