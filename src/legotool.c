@@ -208,7 +208,7 @@ const char *myBasename;
 myBasename = basename((char *) context->myPath);
 if (!myBasename) myBasename = context->myPath;
 
-fprintf(stderr, "usage: %s -g gameName [options] file\n", myBasename);
+fprintf(stderr, "usage: %s [-g gameName] [options] [file]\n", myBasename);
 fprintf(stderr, "         or:\n");
 fprintf(stderr, "       %s [-A|-N|-S]\n", myBasename);
 fprintf(stderr, "           options:\n");
@@ -219,7 +219,7 @@ fprintf(stderr, "                           dumps only matching specification.\n
 fprintf(stderr, "                           If any of saveItem, object, field or value is not '*', non-saveItems aren't dumped.\n");
 fprintf(stderr, "       -E endianness       sets endianness: 0:native, 1:little, 2:big (default: native)\n");
 fprintf(stderr, "                               probably useless\n");
-fprintf(stderr, "       -g gameName         select game, as legotool may adapt some functionality according to game\n");
+fprintf(stderr, "       -g gameName         select game, as legotool adapts some functionality according to game\n");
 fprintf(stderr, "                           The game name may be abbreviated as long as its uniquely identifies game\n");
 fprintf(stderr, "                           Supported game names are:\n");
 fprintf(stderr, "                               batman3         for Lego Batman 3: Beyond Gotham\n");
@@ -233,6 +233,7 @@ fprintf(stderr, "                               incredibles     for Lego The Inc
 fprintf(stderr, "                               superheroes2    for Lego Marvel Super Heroes 2\n");
 fprintf(stderr, "                                               also: sh2\n");
 fprintf(stderr, "                               villains        for Lego DC Super-Villains\n");
+fprintf(stderr, "                           -g is mandatory for options that operate on a file.\n");
 fprintf(stderr, "       -i quantity         mark LEGO Worlds items you unlocked as available with given quantity\n");
 fprintf(stderr, "                           updated items will be marked by a star\n");
 fprintf(stderr, "                           Beware that some quests require some items to be absent from you inventory!\n");
@@ -241,10 +242,10 @@ fprintf(stderr, "       -I quantity         same as -i but for ALL inventory ite
 fprintf(stderr, "                           Quests leading to discovery of new items are NOT updated.\n");
 fprintf(stderr, "       -k                  force checksums update (default is off but on if file is modified)\n");
 fprintf(stderr, "       -n                  do not convert IDs to names (default: convert IDs to names)\n");
-fprintf(stderr, "       -v                  verbose mode (default: off)\n");
 fprintf(stderr, "       -s containerVersion force .savegamedata container version (default: depending on game)\n");
 fprintf(stderr, "                           containerVersion is 1 (without loadSize field) or 2 (with loadSize field)\n");
 fprintf(stderr, "                               probably useless\n");
+fprintf(stderr, "       -v                  verbose mode (default: off)\n");
 fprintf(stderr, "       -V                  display %s version\n", myBasename);
 fprintf(stderr, "       -x value            set DebugSaveItem byte value\n");
 fprintf(stderr, "                           If multiple -x are given, only the last is executed.\n");
@@ -257,8 +258,6 @@ fprintf(stderr, "                              matches the given one. The baseFi
 fprintf(stderr, "                              directory nor extension. baseFileName takes no wildcard\n");
 fprintf(stderr, "                           quotes around 'baseFileName/saveItem:object.field=value' seems unavoidable\n");
 fprintf(stderr, "                           the saveItem, object, field you dont specify is considered wildcard\n");
-fprintf(stderr, "                              useful fields: Default DiscoveryState NumberOfItems\n");
-fprintf(stderr, "                              some useful states: Locked Unlocked Collected UnlockedDepleted\n");
 fprintf(stderr, "                              decimal numbers must be preceded by '%%' e.g. %%999\n");
 fprintf(stderr, "                              hex numbers must be preceded by '%%0x' e.g. %%0xdeadbeef\n");
 fprintf(stderr, "                              float numbers must be preceded by '%%%%' e.g. %%%%0.25\n");
