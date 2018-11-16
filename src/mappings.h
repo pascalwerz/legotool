@@ -30,6 +30,7 @@ typedef struct _mapping { uintmax_t key; uintmax_t game; uintmax_t saveItemID; u
 int IDForText(context_t *context, uintmax_t *resultID, const char *text);
 char *textForID(context_t *context, uintmax_t id, const char *defaultFormat);
 // split saveItem:object.field=value string, where each of saveItem/object/field/value can begin with % for a (dec/hex) integer and %% for a float
+// returns 0 on success
 int splitSaveItemObjectFieldValueString(context_t *context, char *string, const char **baseFileNameRequest, uintmax_t *saveItemRequestedID, uintmax_t *objectRequestedID, uintmax_t *fieldRequestedID, uintmax_t *value);
 
 

@@ -78,7 +78,11 @@ typedef struct _context_t
 	char *willZapString;
 	int willRecomputeChecksums;
 	int willDump;
-	uintmax_t willDumpSaveItemType;
+	const char *willDumpBaseFilename;
+	uintmax_t willDumpSaveItemID;
+	uintmax_t willDumpObjectID;
+	uintmax_t willDumpFieldID;
+	uintmax_t willDumpValue;
 	int willUpdatePercentage;
 	float willUpdatePercentageValue;
 	int willSetDebugSave;

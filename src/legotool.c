@@ -23,12 +23,13 @@
 
 
 
-#define LEGOTOOL_VERSION "0.3.3"
-#define LEGOTOOL_DATE "14-NOV-2018"
+#define LEGOTOOL_VERSION "0.4"
+#define LEGOTOOL_DATE "16-NOV-2018"
 //
 //	** Version history: **
 //	Version	Date			Comment
 //
+//	0.4		16-NOV-2018		-D argument now a complete specification
 //							for batman3, MainCoinTotal now changed in "CoinsVariables" instead of "Coins" saveItem
 //							removed overrides
 //	0.3.3	14-NOV-2018		renamed chunks to saveItems and minor adjustments
@@ -213,8 +214,9 @@ fprintf(stderr, "       %s [-A|-N|-S]\n", myBasename);
 fprintf(stderr, "           options:\n");
 fprintf(stderr, "       -c value            set Coins[Variables]:MainCoinTotal to given value\n");
 fprintf(stderr, "       -d                  dump saveItems (after any modification)\n");
-fprintf(stderr, "       -D saveItem         dumps only given kind of saveItem\n");
-fprintf(stderr, "                               saveItem may be any name or a %%0x key\n");
+fprintf(stderr, "       -D '[baseFileName/]saveItem:object.field=value'\n");
+fprintf(stderr, "                           dumps only matching specification.\n");
+fprintf(stderr, "                           If any of saveItem, object, field or value is not '*', non-saveItems aren't dumped.\n");
 fprintf(stderr, "       -E endianness       sets endianness: 0:native, 1:little, 2:big (default: native)\n");
 fprintf(stderr, "                               probably useless\n");
 fprintf(stderr, "       -g gameName         select game, as legotool may adapt some functionality according to game\n");
@@ -248,7 +250,7 @@ fprintf(stderr, "       -x value            set DebugSaveItem byte value\n");
 fprintf(stderr, "                           If multiple -x are given, only the last is executed.\n");
 fprintf(stderr, "       -z                  also dump empty or useless saveItems (default: off)\n");
 fprintf(stderr, "                              requires -d ou -D\n");
-fprintf(stderr, "       -Z [baseFileName/]saveItem:object.field=value\n");
+fprintf(stderr, "       -Z '[baseFileName/]saveItem:object.field=value'\n");
 fprintf(stderr, "                           set saveItem:object.field = value\n");
 fprintf(stderr, "                           if baseFileName is present, this only applies to a file if its basename\n");
 fprintf(stderr, "                              matches the given one. The baseFileName is the filename without\n");
@@ -261,7 +263,7 @@ fprintf(stderr, "                              decimal numbers must be preceded 
 fprintf(stderr, "                              hex numbers must be preceded by '%%0x' e.g. %%0xdeadbeef\n");
 fprintf(stderr, "                              float numbers must be preceded by '%%%%' e.g. %%%%0.25\n");
 fprintf(stderr, "                              '*' is a wildcard that stands for 'match any'\n");
-fprintf(stderr, "                           If multiple -Z are given, only the last is executed.\n");
+fprintf(stderr, "                           If multiple -Z are given, only the last one is executed.\n");
 fprintf(stderr, "       -%% floatNumber      update completion percentage/discoveries count\n");
 fprintf(stderr, "\n");
 fprintf(stderr, "           options that do not operate on a file:\n");
@@ -282,6 +284,7 @@ int willDumpAllIDs = 0;
 int willDumpNonMatchingIDs = 0;
 int ch;
 int loadDataAtEnd;
+int splitResult;
 intmax_t i, j, k, l;
 
 assert(sizeof(uintmax_t) > sizeof(uint32_t));
@@ -355,15 +358,16 @@ while ((ch = getopt(argc, argv, "%:Ac:dD:E:g:i:I:knNs:SvVx:zZ:?")) != -1)
 		break;
 	case 'd':
 		context.willDump = 1;
-		context.willDumpSaveItemType = ID_WILDCARD;
+		context.willDumpBaseFilename = NULL;
+		context.willDumpSaveItemID = ID_WILDCARD;
+		context.willDumpObjectID = ID_WILDCARD;
+		context.willDumpFieldID = ID_WILDCARD;
+		context.willDumpValue = ID_WILDCARD;
 		break;
 	case 'D':
 		context.willDump = 1;
-		if (IDForText(&context, &context.willDumpSaveItemType, optarg))
-			{
-			// unknown saveItem name, no mapping for it? Simply hash it.
-			context.willDumpSaveItemType = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, optarg);
-			}
+		splitResult = splitSaveItemObjectFieldValueString(&context, optarg, &context.willDumpBaseFilename, &context.willDumpSaveItemID, &context.willDumpObjectID, &context.willDumpFieldID, &context.willDumpValue);
+		if (splitResult != 0) usage(&context, 1);
 		break;
 	case 'E':
 		context.endianness = strtoumax(optarg, NULL, 0);
@@ -470,7 +474,11 @@ if ((context.willRefillAll || context.willRefillMineOnly) && context.game != gam
 if (!context.willDump && !context.willRecomputeChecksums && !context.willUpdatePercentage && !context.willSetDebugSave && !context.willRefillAll && !context.willRefillMineOnly && !context.willZapValue && !context.willSetCoins)
 	{ // nothing to do? just dump
 	context.willDump = 1;
-	context.willDumpSaveItemType = ID_WILDCARD;
+	context.willDumpBaseFilename = NULL;
+	context.willDumpSaveItemID = ID_WILDCARD;
+	context.willDumpObjectID = ID_WILDCARD;
+	context.willDumpFieldID = ID_WILDCARD;
+	context.willDumpValue = ID_WILDCARD;
 	}
 
 context.fileName = argv[0];
@@ -502,7 +510,7 @@ else
 	context.loadOffset = 0x18;
 context.loadSize = 0;	// will be updated with each load block
 
-if (context.willDump)
+if (context.willDump && (!context.willDumpBaseFilename || !strcasecmp(context.willDumpBaseFilename, context.baseFileName)))
 	{
 	printf("******************** dump of %s ********************\n", context.fileName);
 	printf("game: %s\n", gameIdentificationToName(context.game));
@@ -534,7 +542,7 @@ for (loadDataAtEnd = 0; loadDataAtEnd == 0; )
 		exit(1);
 		}
 	// loop over load data blocks
-	if (context.verbose)
+	if (context.verbose && context.willDump && (!context.willDumpBaseFilename || !strcasecmp(context.willDumpBaseFilename, context.baseFileName)))
 		printf("at file offset 0x%jx:\n", context.dataOffset);
 
 	// current load data block is at context.dataOffset, you must at least:
@@ -558,7 +566,7 @@ for (loadDataAtEnd = 0; loadDataAtEnd == 0; )
 		else
 			context.dataSize = sizeof(uint32_t) + 0x400;	// game*
 
-		if (context.willDump)
+		if (context.willDump && (!context.willDumpBaseFilename || !strcasecmp(context.willDumpBaseFilename, context.baseFileName)))
 			{
 			printf("dataType: end marker\n");
 			printf("dataSize: %ju (0x%jx)\n", context.dataSize, context.dataSize);
@@ -578,7 +586,7 @@ for (loadDataAtEnd = 0; loadDataAtEnd == 0; )
 			exit(1);
 			}
 
-		if (context.willDump)
+		if (context.willDump && (!context.willDumpBaseFilename || !strcasecmp(context.willDumpBaseFilename, context.baseFileName)))
 			{
 			printf("dataType: end marker\n");
 			printf("dataSize: %ju (0x%jx)\n", context.dataSize, context.dataSize);
@@ -602,7 +610,7 @@ for (loadDataAtEnd = 0; loadDataAtEnd == 0; )
 		context.playTimeSecond = context.playTime - context.playTimeHour * 3600 - context.playTimeMinute * 60;
 		context.dataType = get32(&context, context.dataOffset + 0x08);
 
-		if (context.willDump)
+		if (context.willDump && (!context.willDumpBaseFilename || !strcasecmp(context.willDumpBaseFilename, context.baseFileName)))
 			{
 			printf("dataType: playTime block for avengers\n");
 			printf("dataSize %ju (0x%jx)\n", context.dataSize, context.dataSize);
@@ -619,7 +627,7 @@ for (loadDataAtEnd = 0; loadDataAtEnd == 0; )
 //		printf("checksum offset 0x%jx length 0x%jx end 0x%jx\n", context.dataOffset, context.dataSize, context.dataOffset + context.dataSize); //***********
 		context.loadChecksumComputed = FNV1DataHash32(context.loadChecksumComputed, context.fileData + context.dataOffset, context.dataSize);
 
-		if (context.willDump)
+		if (context.willDump && (!context.willDumpBaseFilename || !strcasecmp(context.willDumpBaseFilename, context.baseFileName)))
 			{
 			printf("dataType: non-saveItem block for batman3\n");
 			printf("dataSize %ju (0x%jx)\n", context.dataSize, context.dataSize);
@@ -635,7 +643,7 @@ for (loadDataAtEnd = 0; loadDataAtEnd == 0; )
 //		printf("checksum offset 0x%jx length 0x%jx end 0x%jx\n", context.dataOffset, context.dataSize, context.dataOffset + context.dataSize); //***********
 		context.loadChecksumComputed = FNV1DataHash32(context.loadChecksumComputed, context.fileData + context.dataOffset, context.dataSize);
 
-		if (context.willDump)
+		if (context.willDump && (!context.willDumpBaseFilename || !strcasecmp(context.willDumpBaseFilename, context.baseFileName)))
 			{
 			printf("dataType: non-saveItem block for jurassic\n");
 			printf("dataSize %ju (0x%jx)\n", context.dataSize, context.dataSize);
@@ -673,14 +681,14 @@ for (loadDataAtEnd = 0; loadDataAtEnd == 0; )
 		context.playTimeSecond = context.playTime - context.playTimeHour * 3600 - context.playTimeMinute * 60;
 		context.dataType = get32(&context, context.dataOffset + 0x08);
 
-		if (context.willDump)
+		if (context.willDump && (!context.willDumpBaseFilename || !strcasecmp(context.willDumpBaseFilename, context.baseFileName)))
 			{
 			printf("dataType: %s\n", textForID(&context, context.dataType, "0x%08jx"));
 			printf("dataSize %ju (0x%jx)\n", context.dataSize, context.dataSize);
 			printf("unknown: 0x%08jx, playTime: %juh %jum %fs\n", context.unknown1, context.playTimeHour, context.playTimeMinute, context.playTimeSecond);
 			printf("saveItemCount: %jd\n", context.saveItemCount);
 			printf("\n");
-			if (forEachSaveItem(&context, dumpSaveItem, 0) == INVALID_DATA) { fprintf(stderr, "error: file format not as expected.\n"); exit(1); }
+			if (forEachSaveItemWithID(&context, dumpSaveItem, 0, context.willDumpSaveItemID) == INVALID_DATA) { fprintf(stderr, "error: file format not as expected.\n"); exit(1); }
 			}
 		}
 

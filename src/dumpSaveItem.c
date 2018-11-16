@@ -8,6 +8,7 @@
 #include "objects.h"
 #include "memory.h"
 #include "objects.h"
+#include "legotool.h"
 
 #include "fnv.h"
 
@@ -32,8 +33,6 @@ uintmax_t dumpSaveItem(context_t *context, uintmax_t userData)
 {
 	char *format;
 
-
-	if ((context->saveItemID1 != context->willDumpSaveItemType) && (context->willDumpSaveItemType != ID_WILDCARD)) return 0;
 
 	format = context->saveItemObjectFormat;
 
@@ -132,9 +131,31 @@ uintmax_t dumpFormatted(context_t *context)
 	uintmax_t formatIndex;
 	int formatLength;
 	char *format;
+	int hasTarget;
+	uintmax_t printedCount;
 
 
 	if (!context->dumpEmptySaveItems && context->saveItemDataSize == 0)
+		return 0;
+
+	count = context->saveItemDataSize / (objectSize(context) * 1);
+
+	hasTarget = 0;
+	for (uintmax_t i = 0; i < count; i++)
+		{
+		field = (object_t *)(context->fileData + context->saveItemDataOffset + (1 * i + 0) * objectSize(context));
+
+		if (objectObject(context, field) == context->willDumpObjectID || context->willDumpObjectID == ID_WILDCARD)
+			{
+			if (objectField(context, field) == context->willDumpFieldID || context->willDumpFieldID == ID_WILDCARD)
+				{
+				if (objectProbationalValue(context, field) == context->willDumpValue || context->willDumpValue == ID_WILDCARD)
+					hasTarget = 1;
+				}
+			}
+		}
+
+	if (!hasTarget)
 		return 0;
 
 	if (context->verbose)
@@ -149,12 +170,21 @@ uintmax_t dumpFormatted(context_t *context)
 	formatLength = strlen(format);
 	formatIndex = 0;
 
-	count = context->saveItemDataSize / (objectSize(context) * 1);
+	printedCount = 0;
 	for (uintmax_t i = 0; i < count; i++)
 		{
 		field = (object_t *)(context->fileData + context->saveItemDataOffset + (1 * i + 0) * objectSize(context));
 
-		if (formatIndex == 0 && i != 0 && formatLength > 1)
+		if (objectObject(context, field) != context->willDumpObjectID && context->willDumpObjectID != ID_WILDCARD)
+			continue;
+
+		if (objectField(context, field) != context->willDumpFieldID && context->willDumpFieldID != ID_WILDCARD)
+			continue;
+
+		if (objectProbationalValue(context, field) != context->willDumpValue && context->willDumpValue != ID_WILDCARD)
+			continue;
+
+		if (formatIndex == 0 && printedCount != 0 && formatLength > 1)
 			printf("\n");
 
 		printf("\t");
@@ -177,12 +207,13 @@ uintmax_t dumpFormatted(context_t *context)
 			dumpField(context, field, "%f", 0);
 			break;
 		case 't':
-			dumpField(context, field, "%t", 0);
+			dumpField(context, field, "%t", 0);	// fake format string
 			break;
 			}
 		formatIndex = (formatIndex + 1) % formatLength;
 
 		printf("\n");
+		printedCount++;
 		}
 
 	printf("}\n\n");
@@ -199,6 +230,9 @@ uintmax_t dumpJumpToSystem(context_t *context)
 	uintmax_t count;
 	uintmax_t i;
 
+
+	if (context->willDumpSaveItemID != ID_WILDCARD || context->willDumpObjectID != ID_WILDCARD || context->willDumpFieldID != ID_WILDCARD || context->willDumpValue != ID_WILDCARD)
+		return 0;
 
 	if (!context->dumpEmptySaveItems && context->saveItemDataSize == 0)
 		return 0;
@@ -231,6 +265,9 @@ uintmax_t dumpStream(context_t *context)
 	char *title;
 
 
+	if (context->willDumpSaveItemID != ID_WILDCARD || context->willDumpObjectID != ID_WILDCARD || context->willDumpFieldID != ID_WILDCARD || context->willDumpValue != ID_WILDCARD)
+		return 0;
+
 	if (!context->dumpEmptySaveItems && context->saveItemDataSize == 0)
 		return 0;
 
@@ -255,6 +292,9 @@ uintmax_t dumpDont(context_t *context)
 {
 	char *title;
 
+
+	if (context->willDumpSaveItemID != ID_WILDCARD || context->willDumpObjectID != ID_WILDCARD || context->willDumpFieldID != ID_WILDCARD || context->willDumpValue != ID_WILDCARD)
+		return 0;
 
 	if (!context->dumpEmptySaveItems)	// even if size is non-zero, don't dump if empty saveItems are not dumped
 		return 0;
@@ -282,6 +322,9 @@ uintmax_t dump24(context_t *context)
 	uintmax_t count;
 	uintmax_t i;
 
+
+	if (context->willDumpSaveItemID != ID_WILDCARD || context->willDumpObjectID != ID_WILDCARD || context->willDumpFieldID != ID_WILDCARD || context->willDumpValue != ID_WILDCARD)
+		return 0;
 
 	if (!context->dumpEmptySaveItems && context->saveItemDataSize == 0)
 		return 0;
@@ -318,6 +361,9 @@ uintmax_t dump4(context_t *context)
 	uintmax_t i;
 
 
+	if (context->willDumpSaveItemID != ID_WILDCARD || context->willDumpObjectID != ID_WILDCARD || context->willDumpFieldID != ID_WILDCARD || context->willDumpValue != ID_WILDCARD)
+		return 0;
+
 	if (!context->dumpEmptySaveItems && context->saveItemDataSize == 0)
 		return 0;
 
@@ -353,6 +399,9 @@ uintmax_t dump2(context_t *context)
 	uintmax_t i;
 
 
+	if (context->willDumpSaveItemID != ID_WILDCARD || context->willDumpObjectID != ID_WILDCARD || context->willDumpFieldID != ID_WILDCARD || context->willDumpValue != ID_WILDCARD)
+		return 0;
+
 	if (!context->dumpEmptySaveItems && context->saveItemDataSize == 0)
 		return 0;
 
@@ -387,6 +436,9 @@ uintmax_t dump1(context_t *context)
 	uintmax_t count;
 	uintmax_t i;
 
+
+	if (context->willDumpSaveItemID != ID_WILDCARD || context->willDumpObjectID != ID_WILDCARD || context->willDumpFieldID != ID_WILDCARD || context->willDumpValue != ID_WILDCARD)
+		return 0;
 
 	if (!context->dumpEmptySaveItems && context->saveItemDataSize == 0)
 		return 0;
