@@ -128,7 +128,6 @@ uintmax_t dumpFormatted(context_t *context)
 	char *title;
 	object_t *field;
 	uintmax_t count;
-	uintmax_t formatIndex;
 	int formatLength;
 	char *format;
 	int hasTarget;
@@ -168,7 +167,6 @@ uintmax_t dumpFormatted(context_t *context)
 
 	format = context->saveItemObjectFormat;
 	formatLength = strlen(format);
-	formatIndex = 0;
 
 	printedCount = 0;
 	for (uintmax_t i = 0; i < count; i++)
@@ -184,12 +182,12 @@ uintmax_t dumpFormatted(context_t *context)
 		if (objectProbationalValue(context, field) != context->willDumpValue && context->willDumpValue != ID_WILDCARD)
 			continue;
 
-		if (formatIndex == 0 && printedCount != 0 && formatLength > 1)
+		if ((i % formatLength) == 0 && printedCount != 0 && formatLength > 1)
 			printf("\n");
 
 		printf("\t");
 
-		switch (format[formatIndex])
+		switch (format[i % formatLength])
 			{
 		case 'x':
 			dumpField(context, field, "0x%08jx", 0);
@@ -210,7 +208,6 @@ uintmax_t dumpFormatted(context_t *context)
 			dumpField(context, field, "%t", 0);	// fake format string
 			break;
 			}
-		formatIndex = (formatIndex + 1) % formatLength;
 
 		printf("\n");
 		printedCount++;
