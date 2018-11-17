@@ -233,7 +233,7 @@ fprintf(stderr, "                               incredibles     for Lego The Inc
 fprintf(stderr, "                               superheroes2    for Lego Marvel Super Heroes 2\n");
 fprintf(stderr, "                                               also: sh2\n");
 fprintf(stderr, "                               villains        for Lego DC Super-Villains\n");
-fprintf(stderr, "                           -g is mandatory for options that operate on a file.\n");
+fprintf(stderr, "                           If -g is abent, game will default to Lego Worlds.\n");
 fprintf(stderr, "       -i quantity         mark LEGO Worlds items you unlocked as available with given quantity\n");
 fprintf(stderr, "                           updated items will be marked by a star\n");
 fprintf(stderr, "                           Beware that some quests require some items to be absent from you inventory!\n");
@@ -291,7 +291,7 @@ assert(sizeof(uintmax_t) > sizeof(uint32_t));
 context.myPath = argv[0];
 context.knownIDs = globalKnownIDs;
 context.knownIDsCount = globalKnownIDsCount;
-context.game = gameNotDefined;
+context.game = gameWorlds;
 
 context.defaultID               = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Default");
 context.unknownFlagID           = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Unknown");
