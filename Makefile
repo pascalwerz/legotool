@@ -6,7 +6,7 @@ else
  DEBUGFLAGS=
 endif
 
-TARGETS=legotool hash rhash brhash checksum
+TARGETS=legotool hash rhash checksum
 
 LEGOTOOL_SRC=$(SRC)/legotool.c $(SRC)/saveItems.c $(SRC)/objects.c $(SRC)/mappings.c $(SRC)/ids.c $(SRC)/memory.c \
     $(SRC)/dumpSaveItem.c $(SRC)/refillProps.c $(SRC)/zap.c $(SRC)/setDebugSaveItem.c $(SRC)/setCoins.c $(SRC)/games.c \

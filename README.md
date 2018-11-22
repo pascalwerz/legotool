@@ -16,11 +16,11 @@ No other game is supported.
 
 More, for all these games, only a limited number of files are supported, namely the *GAME\*.SAVEGAMEDATA* and *DLC\*.SAVEGAMEDATA* inside the *SLOT\** folders. These files do not hold everything about a saved game but hold most progress information.
 
+**Tools**
+
 *legotool* is the tool to read and write the *.savegamedata* files. Other tools help to build it.
 
 *rhash* is a tool to analyse saved games, finding strings matching given FNV1 hash using a *user-built* dictionary.
-
-*brhash* is a tool to analyse saved games, finding strings matching given FNV1 hash using brute force. It is seldom needed.
 
 *hash* is a tool to convert a string to its FNV1 hash.
 
