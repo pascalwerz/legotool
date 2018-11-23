@@ -4,11 +4,7 @@ First, consult the [FNV hash wikipedia article](https://en.wikipedia.org/wiki/Fo
 
 Second, beware that the FNV1 Lego function is case insensitive. No fancy international characters support here, a-z are simply mapped to A-Z, that is, the 26 letters are uppercased: hashed string are ASCII only identifiers. From now on, FNV or fnv stands for the Lego's 32-bits FNV1 uppercased hash function and, except were noted, the initial hash or offset is 0x811c9dc5.
 
-Lego games make extensive use of its FNV1 hash function. Every object's name is remembered by its hash, transforming name comparison from a string compare to an integer compare, much much faster. However, as FNV1 hash collide, that is, many strings yield the same FNV hash, e.g. the string "INFINITYSTONE_GREENDENAR" and the string "CHARACTERABILITYBACKPACK2" will both yield the same hash: 0x12345678, a collision-safe fallback process is used: when such a collision occurs, a random unique number is chosen instead of the hash. If this number needs to be remembered across game invocation, it is stored in some file (and so is probably easily to be found).
-
-What follows only applies to number that really are the hash of the string.
-
-
+Lego games make extensive use of its FNV1 hash function. Every object's name is remembered by its hash, transforming name comparison from a string compare to an integer compare, much much faster.
 
 Adding a game support or updating **legotool** mainly requires finding the string that yields a known FNV hash. Sometimes, while searching such strings, you may know a hash is built from a compound string, e.g. you know the string starts with "DebugUsed" or you suspect the string ends with "_StoryComplete". Some 'theory' may help you with some hard-to-reverse hash.
 
