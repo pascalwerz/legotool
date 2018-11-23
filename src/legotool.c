@@ -29,6 +29,7 @@
 //	** Version history: **
 //	Version	Date			Comment
 //
+//							removed -s option
 //	0.4		16-NOV-2018		-D argument now a complete specification
 //							for batman3, MainCoinTotal now changed in "CoinsVariables" instead of "Coins" saveItem
 //							removed overrides
@@ -242,9 +243,6 @@ fprintf(stderr, "       -I quantity         same as -i but for ALL inventory ite
 fprintf(stderr, "                           Quests leading to discovery of new items are NOT updated.\n");
 fprintf(stderr, "       -k                  force checksums update (default is off but on if file is modified)\n");
 fprintf(stderr, "       -n                  do not convert IDs to names (default: convert IDs to names)\n");
-fprintf(stderr, "       -s containerVersion force .savegamedata container version (default: depending on game)\n");
-fprintf(stderr, "                           containerVersion is 1 (without loadSize field) or 2 (with loadSize field)\n");
-fprintf(stderr, "                               probably useless\n");
 fprintf(stderr, "       -v                  verbose mode (default: off)\n");
 fprintf(stderr, "       -V                  display %s version\n", myBasename);
 fprintf(stderr, "       -x value            set DebugSaveItem byte value\n");
@@ -399,9 +397,6 @@ while ((ch = getopt(argc, argv, "%:Ac:dD:E:g:i:I:knNs:SvVx:zZ:?")) != -1)
 	case 'N':
 		willDumpNonMatchingIDs = 1;
 		break;
-	case 's':
-		context.shellVersion = strtoumax(optarg, NULL, 0);
-		break;
 	case 'v':
 		context.verbose = 1;
 		break;
@@ -453,18 +448,15 @@ if (context.game == gameNotDefined)
 	}
 
 // set up context.shellVersion according to game
-if (context.shellVersion == 0)
+switch (context.game)
 	{
-	switch (context.game)
-		{
-	case gameBatman3:
-	case gameJurassic:
-		context.shellVersion = 1;	// without loadSize
-		break;
-	default:
-		context.shellVersion = 2;	// with loadSize
-		break;
-		}
+case gameBatman3:
+case gameJurassic:
+	context.shellVersion = 1;	// without loadSize
+	break;
+default:
+	context.shellVersion = 2;	// with loadSize
+	break;
 	}
 
 if ((context.willRefillAll || context.willRefillMineOnly) && context.game != gameWorlds)
