@@ -1,4 +1,6 @@
 /* this file is part of legotool, by xvi */
+#include <string.h>
+
 #include "memory.h"
 
 
@@ -59,6 +61,38 @@ case 1:
 case 2:
 	return (uintmax_t) bytePtr[7] | ((uintmax_t) bytePtr[6] << 8) | ((uintmax_t) bytePtr[5] << 16) | ((uintmax_t) bytePtr[4] << 24) | ((uintmax_t) bytePtr[3] << 32) | ((uintmax_t) bytePtr[2] << 40) | ((uintmax_t) bytePtr[1] << 48) | ((uintmax_t) bytePtr[0] << 56);
 	}
+}
+
+
+
+void *readCounted32Bytes(void *ptr, uintmax_t availableBytes, uintmax_t *resultBytes, int endianness)
+{
+uint8_t *bytePtr;
+uintmax_t length;
+void *result;
+
+
+bytePtr = ptr;
+result = NULL;
+length = 0;
+
+if (availableBytes >= 4)
+	{
+	length = read32(bytePtr, endianness);
+
+	if (availableBytes >= length + 4)
+		{
+		result = malloc(length);
+		if (result)
+			{
+			memcpy(result, bytePtr + 4, length);
+			}
+		}
+	}
+
+if (resultBytes) *resultBytes = length;
+
+return result;
 }
 
 
@@ -147,6 +181,18 @@ case 2:
 	bytePtr[0] = value;
 	break;
 	}
+}
+
+
+
+void writeCounted32Bytes(void *ptr, uintmax_t length, void *data, int endianness)
+{
+uint8_t *bytePtr;
+
+
+bytePtr = (uint8_t *) ptr;
+write32(bytePtr, endianness, length);
+memcpy(bytePtr + 4, data, length);
 }
 
 
