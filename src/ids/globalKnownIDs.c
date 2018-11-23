@@ -18,8 +18,9 @@ mapping globalKnownIDs[] =	// Known IDs are in included files. Much easier to ma
 #include "01-common/coins.c"
 #include "01-common/metrics.c"
 #include "01-common/cheats.c"
+#include "01-common/questTypes.c"
 
-
+// games
 #include "batman3/ids.c"
 #include "jurassic/ids.c"
 #include "avengers/ids.c"

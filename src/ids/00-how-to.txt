@@ -127,7 +127,7 @@ bbedit words/${GAME}.txt
 # save words/${GAME}.txt
 # close words/${GAME}.txt
 
-# check for overridden labels
+# check for overridden labels (I never found any)
 cat textfiles.txt | while read FILE; do if grep -q "^\0: [0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f] [^ ]*" "$FILE"; then cat "$FILE"; fi; done | cut -d' ' -f2- | while read LINE; do HASH=$(echo $LINE | cut -d' ' -f1); LABEL=$(echo $LINE | cut -d' ' -f2-); COMPUTED=$(./hash -x "$LABEL"); if [ $COMPUTED != $HASH ]; then printf "{ 0x%s, gameAny, -1, 0x2, \"%s\", \"\", NULL }, \n" $HASH "$LABEL"; fi; done | sort -fu | bbedit
 # verify generated lines, if any
 
@@ -190,6 +190,26 @@ make
 # dump a saved game file, excluding empty saveItems, without name lookup
 ./00-do.sh -n -g ${GAME} -d "$SAVE" | bbedit
 # extract hashs to src/ids/${GAME}/ids.c
+bbedit src/ids/${GAME}/ids.c
+
+# for games with QuestLogs directory (CONTENT/S[1-4]-SYSGLOBAL/2500304796/QL/AUTOSAVE.GAMESAVE) (LEGO Worlds)
+# grab all quest names
+find $DATA -iname '*.txt' -exec grep -i OwnerQuest {} \; | bbedit
+# remove leading whitespace: replace pattern '^[ \t]+' with ''
+# remove trailing whitespace: replace pattern '[ \t]+$' with ''
+# remove commented lines: replace pattern '^//.*\n' with ''
+#		- or -
+# uncomment commented lines: replace pattern '^//+[ \t]+' with ''
+# keep only name: replace pattern 'OwnerQuest\s*=\s* ' with ''
+# Remove Prefix/Suffix '"' and '"'
+# remove invalid line from templates etc.
+# sort lines
+# join all on a single line: replace pattern '\n' with ' '
+# prepend './hash '
+# append  '|bbedit'
+# copy and paste in a terminal to execute
+# CamelCase, cleanup etc.
+# append to src/ids/${GAME}/ids.c
 bbedit src/ids/${GAME}/ids.c
 
 # from last dump output, copy to a new file lines containing pattern '\.[0-9a-f]{8}'
