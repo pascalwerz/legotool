@@ -10,8 +10,8 @@ typedef struct _mapping mapping;
 
 #define ID_WILDCARD			((uintmax_t)-1)	// no collision possible as IDs are 32 bits only and uintmax_t > 32 bits
 
-#define FLAGS_FINAL		(1 << 0)
-#define FLAGS_OVERRIDE	(1 << 1)
+#define FLAGS_FINAL		(1 << 0)	// human readable string shouldn't not be updated by automated tools
+#define FLAGS_OVERRIDE	(1 << 1)	// key != FNV1UppercaseStringHash32(label)
 
 // mapping between a LABEL and a KEY.
 // label is the label name

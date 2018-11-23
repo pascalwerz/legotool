@@ -182,7 +182,7 @@ uintmax_t dumpFormatted(context_t *context)
 		if (objectProbationalValue(context, field) != context->willDumpValue && context->willDumpValue != ID_WILDCARD)
 			continue;
 
-		if ((i % formatLength) == 0 && printedCount != 0 && formatLength > 1)
+		if ((i % formatLength) == 0 && (printedCount != 0) && (formatLength > 1))
 			printf("\n");
 
 		printf("\t");
