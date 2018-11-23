@@ -25,7 +25,6 @@ void updateFileChecksums(context_t *context);	// requires context->loadOffset an
 // functions that operates on NO file
 void dumpAllIDs(context_t *context);
 void dumpNonMatchingIDs(context_t *context);
-void generateSynalysis(context_t *context);
 
 // printing IDs require printID()
 void printID(const mapping* id);
