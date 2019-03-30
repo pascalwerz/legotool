@@ -180,9 +180,27 @@ int try(uint32_t seed, uint32_t seedWithSuffix, char *separator)
 int w2, w3;
 uint32_t hash2, hash3;
 char *word;
-int i;
+int i, j;
 mapping *foundHash;
 int result;
+char separatorString[256];
+
+
+j = 0;
+for (i = 0; i < strlen(separator); i++)
+	{
+	switch(separator[i])
+		{
+	case '\\':
+		separatorString[j++] = '\\';
+		separatorString[j++] = separator[i];
+		break;
+	default:
+		separatorString[j++] = separator[i];
+		break;
+		}
+	}
+separatorString[j] = 0;
 
 // 3 words: we'll try xxx/w3/w2, / being a separator
 // 2 words: we'll try xxx/w2, / being a separator
@@ -230,7 +248,7 @@ if (tryWords >= 0x2)
 				{
 				result++;
 				printf("%3lu ", strlen(prefixLabel) + strlen(foundHash->label) + strlen(separator) + strlen(wordHash[w2].label));
-				printf("{ 0x%08x, gameAny, -1, 0x0, \"%s%s%s%s%s\", \"\", NULL },\n", seedWithSuffix, prefixLabel, foundHash->label, separator, wordHash[w2].label, suffixLabel);
+				printf("{ 0x%08x, gameAny, -1, 0x0, \"%s%s%s%s%s\", \"\", NULL },\n", seedWithSuffix, prefixLabel, foundHash->label, separatorString, wordHash[w2].label, suffixLabel);
 				}
 			}
 
@@ -263,7 +281,7 @@ if (tryWords >= 0x2)
 						{
 						result++;
 						printf("%3lu ", strlen(prefixLabel) + strlen(foundHash->label) + strlen(separator) + strlen(wordHash[w3].label) + strlen(separator) + strlen(wordHash[w2].label));
-						printf("{ 0x%08x, gameAny, -1, 0x0, \"%s%s%s%s%s%s%s\", \"\", NULL },\n", seedWithSuffix, prefixLabel, foundHash->label, separator, wordHash[w3].label, separator, wordHash[w2].label, suffixLabel);
+						printf("{ 0x%08x, gameAny, -1, 0x0, \"%s%s%s%s%s%s%s\", \"\", NULL },\n", seedWithSuffix, prefixLabel, foundHash->label, separatorString, wordHash[w3].label, separatorString, wordHash[w2].label, suffixLabel);
 						}
 					}
 				}

@@ -286,6 +286,28 @@ objectRule_t rules[] =
 	{ gameVillains,     &saveItemStoryComplete,                   objectVersion4488,  "X" },
 	{ gameVillains,     &saveItemTrueHero,                        objectVersion4488,  "X" },
 
+	{ gameMovie2,       &saveItemLXFMLModels,                     objectVersion4488,  "Xd" },
+	{ gameMovie2,       &saveItemThemes,                          objectVersion4488,  "Xd" },
+	{ gameMovie2,       &saveItemProps,                           objectVersion4488,  "Xd" },
+	{ gameMovie2,       &saveItemItems,                           objectVersion4488,  "Xdd" },
+	{ gameMovie2,       &saveItemCustomiser,                      objectVersion4488,  "Xd" },
+	{ gameMovie2,       &saveItemCustomiserSave,                  objectVersion4488,  "Stream" },
+	{ gameMovie2,       &saveItemCheats,                          objectVersion4488,  "X" },
+	{ gameMovie2,       &saveItemStoryComplete,                   objectVersion4488,  "X" },
+	{ gameMovie2,       &saveItemSaturnQuest,                     objectVersion4488,  "X" },
+	{ gameMovie2,       &saveItemTraderBrick,                     objectVersion4488,  "X" },
+	{ gameMovie2,       &saveItemStickers,                        objectVersion4488,  "Xd" },
+	{ gameMovie2,       &saveItemGoldBrickMachine,                objectVersion4488,  "Xd" },
+	{ gameMovie2,       &saveItemBuildBricks,                     objectVersion4488,  "d" },
+	{ gameMovie2,       &saveItemVOCollectables,                  objectVersion4488,  "X" },
+	{ gameMovie2,       &saveItemCellTypes,                       objectVersion4488,  "Xd" },
+	{ gameMovie2,       &saveItemBricks,                          objectVersion4488,  "X" },
+	{ gameMovie2,       &saveItemGoldBricks,                      objectVersion4488,  "X" },
+	{ gameMovie2,       &saveItemCoins,                           objectVersion4488,  "d" },
+	{ gameMovie2,       &saveItemCharacters,                      objectVersion4488,  "Xd" },
+	{ gameMovie2,       &saveItemMetrics,                         objectVersion4488,  "d" },
+	{ gameMovie2,       &saveItemCheckpoints,                     objectVersion4488,  "X" },
+
 //	{ gameXXXXXXXXXXXX, &saveItemXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX, objectVersionXXXXX, "?" },
 
 	// catch-all rule: objectVersion4488, unknown format. may help for unknown future game files analysis
@@ -310,6 +332,7 @@ void saveItemInitialize(void)
 	saveItemBounty                          = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Bounty");
 	saveItemBricks                          = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Bricks");
 	saveItemBridgeLevels                    = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "BridgeLevels");
+	saveItemBuildBricks                     = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "BuildBricks");
 	saveItemCarbonite                       = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Carbonite");
 	saveItemCellTypes                       = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "CellTypes");
 	saveItemChallengeGoal                   = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "ChallengeGoal");
@@ -336,6 +359,7 @@ void saveItemInitialize(void)
 	saveItemFirstOrder                      = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "FirstOrder");
 	saveItemGalaxyMapDestination            = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "GalaxyMapDestination");
 	saveItemGeneral                         = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "General");
+	saveItemGoldBrickMachine                = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "GoldBrickMachine");
 	saveItemGoldBrickMonumentCollectableDef = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "GoldBrickMonumentCollectableDef");
 	saveItemGoldBricks                      = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "GoldBricks");
 	saveItemGoldBricksVariables             = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "GoldBricksVariables");
@@ -365,16 +389,19 @@ void saveItemInitialize(void)
 	saveItemRedBricksVariables              = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "RedBricksVariables");
 	saveItemRenovation                      = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Renovation");
 	saveItemResistance                      = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Resistance");
+	saveItemSaturnQuest                     = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "SaturnQuest");
 	saveItemSaveStation                     = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "SaveStation");
 	saveItemScavenger                       = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Scavenger");
 	saveItemSpaceShooterSystem              = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "SpaceShooterSystem");
 	saveItemSpinjitzu                       = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Spinjitzu");
+	saveItemStickers                        = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Stickers");
 	saveItemStoryComplete                   = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "StoryComplete");
 	saveItemStoryCompleteVariables          = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "StoryCompleteVariables");
 	saveItemSuitTokens                      = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "SuitTokens");
 	saveItemSuitTokensVariables             = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "SuitTokensVariables");
 	saveItemTalisman                        = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Talisman");
 	saveItemThemes                          = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Themes");
+	saveItemTraderBrick                     = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "TraderBrick");
 	saveItemTranslate                       = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Translate");
 	saveItemTrueHero                        = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "TrueHero");
 	saveItemTrueHeroVariables               = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "TrueHeroVariables");
@@ -388,7 +415,7 @@ void saveItemInitialize(void)
 }
 
 // these ForEach... functions made code nicer and easier to write.
-uintmax_t forEachSaveItemWithID(context_t *context, forEachFunction f, uintmax_t userData, uintmax_t saveItemID)
+uintmax_t forEachSaveItemWithID(context_t *context, forEachSaveItemFunction f, uintmax_t userData, uintmax_t saveItemID)
 {
 	int match;
 	int returnedValue;
@@ -462,7 +489,7 @@ uintmax_t forEachSaveItemWithID(context_t *context, forEachFunction f, uintmax_t
 
 
 
-uintmax_t forEachSaveItemWithName(context_t *context, forEachFunction f, uintmax_t userData, char *saveItemName)
+uintmax_t forEachSaveItemWithName(context_t *context, forEachSaveItemFunction f, uintmax_t userData, char *saveItemName)
 {
 	saveItemInitialize();
 
@@ -471,7 +498,7 @@ uintmax_t forEachSaveItemWithName(context_t *context, forEachFunction f, uintmax
 
 
 
-uintmax_t forEachSaveItem(context_t *context, forEachFunction f, uintmax_t userData)
+uintmax_t forEachSaveItem(context_t *context, forEachSaveItemFunction f, uintmax_t userData)
 {
 	saveItemInitialize();
 

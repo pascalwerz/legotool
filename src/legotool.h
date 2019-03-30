@@ -26,7 +26,7 @@ void updateFileChecksums(context_t *context);	// requires context->loadOffset an
 void dumpAllIDs(context_t *context);
 void dumpNonMatchingIDs(context_t *context);
 
-// printing IDs require printID()
+// printing IDs requires printID()
 void printID(const mapping* id);
 
 // utility

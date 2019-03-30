@@ -17,6 +17,8 @@ static keyword_t gameKeywords[] =	// this array will automatically be sorted and
 		{ gameForceAwakens, SYNOMYM, 1, 12, "forceawakens"},
 		{ gameIncredibles,        0, 1, 11, "incredibles"},
 		{ gameJurassic,           0, 1,  8, "jurassic"},
+		{ gameMovie2,             0, 1,  6, "movie2"},
+		{ gameMovie2,       SYNOMYM, 1,  2, "m2"},
 		{ gameNinjago,            0, 1,  7, "ninjago"},
 		{ gameSuperHeroes2, SYNOMYM, 2,  3, "sh2"},
 		{ gameSuperHeroes2,       0, 2, 12, "superheroes2"},

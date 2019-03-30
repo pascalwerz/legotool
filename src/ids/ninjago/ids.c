@@ -1,4 +1,5 @@
 /* this file is part of legotool, by xvi */
+
 // game01 Spinjitzu
 { 0xe419a9c0, gameNinjago, 0x03f32da1, 0x0, "Spinjitzu_Unlock_Base", "", NULL },
 { 0xfd2e14e5, gameNinjago, 0x03f32da1, 0x0, "Spinjitzu_Unlock_Earth", "", NULL },

@@ -14,7 +14,12 @@ uintmax_t zapFunction(context_t *context, object_t *field, uintmax_t fieldID, ui
 
 uintmax_t zapFunction(context_t *context, object_t *field, uintmax_t fieldID, uintmax_t userData)
 {
-	setObjectValue(context, field, fieldID, userData);
+	if (objectProbationalValue(context, field) != userData)
+		{
+		if (context->verbose)
+			printf("updating %s/%s:%s.%s=%s\n", context->baseFileName, textForID(context, context->saveItemID1, "%08jx"), textForID(context, objectObject(context, field), "%08jx"), textForID(context, objectField(context, field), "%08jx"), textForID(context, userData, "%%0x%08jx"));
+		setObjectValue(context, field, fieldID, userData);
+		}
 
 	return 0;
 }

@@ -37,7 +37,7 @@ uintmax_t dumpSaveItem(context_t *context, uintmax_t userData)
 	format = context->saveItemObjectFormat;
 
 	if (0) {}
-	else if (!strcasecmp(format, "-"))
+	else if (format[0] == '-')
 		dumpDont(context);
 	else if (!strcasecmp(format, "?"))
 		dumpUnknown(context);
@@ -80,7 +80,7 @@ void dumpField(context_t *context, object_t *data, const char *valueFormat, int 
 			if (t && gmtime_r(&t, &tm))
 				{
 				// gmtime required, NOT localtime, even if this is NOT an UTC time_t
-				// the displayed time will be the local time of game timestamp was taken
+				// the displayed time will then be the local time *where* and *when* game timestamp was taken
 				asctime_r(&tm, timeString);
 				if (timeString[strlen(timeString) - 1] == '\n') timeString[strlen(timeString) - 1] = 0;
 				sprintf(tmp, "0x%08jx [%s]", (uintmax_t) objectProbationalValue(context, data), timeString);
@@ -157,7 +157,7 @@ uintmax_t dumpFormatted(context_t *context)
 	if (!hasTarget)
 		return 0;
 
-	if (context->verbose)
+	if (context->verbose >= 2)
 		printf("at file offset 0x%jx:\n", context->saveItemOffset);
 
 	title = textForID(context, context->saveItemID1, "0x%08jx");
@@ -234,7 +234,7 @@ uintmax_t dumpJumpToSystem(context_t *context)
 	if (!context->dumpEmptySaveItems && context->saveItemDataSize == 0)
 		return 0;
 
-	if (context->verbose)
+	if (context->verbose >= 2)
 		printf("at file offset 0x%jx:\n", context->saveItemOffset);
 
 	title = textForID(context, context->saveItemID1, "0x%08jx");
@@ -268,7 +268,7 @@ uintmax_t dumpStream(context_t *context)
 	if (!context->dumpEmptySaveItems && context->saveItemDataSize == 0)
 		return 0;
 
-	if (context->verbose)
+	if (context->verbose >= 2)
 		printf("at file offset 0x%jx:\n", context->saveItemOffset);
 
 	title = textForID(context, context->saveItemID1, "0x%08jx");
@@ -296,7 +296,7 @@ uintmax_t dumpDont(context_t *context)
 	if (!context->dumpEmptySaveItems)	// even if size is non-zero, don't dump if empty saveItems are not dumped
 		return 0;
 
-	if (context->verbose)
+	if (context->verbose >= 2)
 		printf("at file offset 0x%jx:\n", context->saveItemOffset);
 
 	title = textForID(context, context->saveItemID1, "0x%08jx");
@@ -326,7 +326,7 @@ uintmax_t dump24(context_t *context)
 	if (!context->dumpEmptySaveItems && context->saveItemDataSize == 0)
 		return 0;
 
-	if (context->verbose)
+	if (context->verbose >= 2)
 		printf("at file offset 0x%jx:\n", context->saveItemOffset);
 
 	title = textForID(context, context->saveItemID1, "0x%08jx");
@@ -364,7 +364,7 @@ uintmax_t dump4(context_t *context)
 	if (!context->dumpEmptySaveItems && context->saveItemDataSize == 0)
 		return 0;
 
-	if (context->verbose)
+	if (context->verbose >= 2)
 		printf("at file offset 0x%jx:\n", context->saveItemOffset);
 
 	title = textForID(context, context->saveItemID1, "0x%08jx");
@@ -402,7 +402,7 @@ uintmax_t dump2(context_t *context)
 	if (!context->dumpEmptySaveItems && context->saveItemDataSize == 0)
 		return 0;
 
-	if (context->verbose)
+	if (context->verbose >= 2)
 		printf("at file offset 0x%jx:\n", context->saveItemOffset);
 
 	title = textForID(context, context->saveItemID1, "0x%08jx");
@@ -440,7 +440,7 @@ uintmax_t dump1(context_t *context)
 	if (!context->dumpEmptySaveItems && context->saveItemDataSize == 0)
 		return 0;
 
-	if (context->verbose)
+	if (context->verbose >= 2)
 		printf("at file offset 0x%jx:\n", context->saveItemOffset);
 
 	title = textForID(context, context->saveItemID1, "0x%08jx");

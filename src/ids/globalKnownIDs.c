@@ -1,6 +1,4 @@
 /* this file is part of legotool, by xvi */
-#include <stdlib.h>
-#include <stdint.h>
 
 #include "../mappings.h"
 #include "../games.h"
@@ -13,7 +11,6 @@ mapping globalKnownIDs[] =	// Known IDs are in included files. Much easier to ma
 #include "01-common/saveItems.c"
 #include "01-common/fields.c"
 #include "01-common/states.c"
-// shared definitions
 #include "01-common/savegame.c"
 #include "01-common/coins.c"
 #include "01-common/metrics.c"
@@ -30,6 +27,7 @@ mapping globalKnownIDs[] =	// Known IDs are in included files. Much easier to ma
 #include "incredibles/ids.c"
 #include "superheroes2/ids.c"
 #include "villains/ids.c"
+#include "movie2/ids.c"
 	};
 
 uintmax_t globalKnownIDsCount = sizeof(globalKnownIDs) / sizeof(*globalKnownIDs);

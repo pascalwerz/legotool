@@ -1,4 +1,5 @@
 /* this file is part of legotool, by xvi */
+
 // game1 VRHighScore
 { 0x99125938, gameBatman3, 0x2bc3f4a9, 0x0, "VRRoomRunAvoidA_VRHighScore", "", NULL },
 { 0x1bb3a8df, gameBatman3, 0x2bc3f4a9, 0x0, "VRRoomBreakoutA_VRHighScore", "", NULL },

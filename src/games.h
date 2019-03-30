@@ -27,6 +27,7 @@ typedef enum
 	gameIncredibles,
 	gameSuperHeroes2,
 	gameVillains,
+	gameMovie2,
 	} gameIdentification;
 
 gameIdentification nameToGameIdentification(const char * name);

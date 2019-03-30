@@ -10,6 +10,7 @@ TARGETS=legotool hash rhash checksum
 
 LEGOTOOL_SRC=$(SRC)/legotool.c $(SRC)/saveItems.c $(SRC)/objects.c $(SRC)/mappings.c $(SRC)/ids.c $(SRC)/memory.c \
     $(SRC)/dumpSaveItem.c $(SRC)/refillProps.c $(SRC)/zap.c $(SRC)/setDebugSaveItem.c $(SRC)/setCoins.c $(SRC)/games.c \
+	$(SRC)/questLog.c \
     $(SRC)/ids/globalKnownIDs.c \
     $(SRC)/mappedFile.c $(SRC)/fnv.c $(SRC)/keywords.c
 LEGOTOOL_OBJ=$(patsubst $(SRC)/%,$(OBJ)/%,$(LEGOTOOL_SRC:.c=.o))

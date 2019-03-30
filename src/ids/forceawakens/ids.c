@@ -1,4 +1,5 @@
 /* this file is part of legotool, by xvi */
+
 // game01 ChargeChallenge
 { 0x3bba77f5, gameForceAwakens, 0xf6efb070, 0x0, "Hub_T_28_General", "", NULL },
 { 0x87df3b98, gameForceAwakens, 0xf6efb070, 0x0, "Hub_T_29_General", "", NULL },

@@ -24,6 +24,7 @@ cd "/Volumes/Disque/develop/L/legotool"  # the legotool/hash/rhash folder
 GAME=worlds                              # a directory name for the game
 DATA="datas/${GAME}"                     # "/path/to/uncompressed/game/data/files"
 SAVE="saves/${GAME}"                     # a directory containing a game's savegamedata slot content
+LIVE="livesaves/${GAME}/SLOT1"           # same as $SAVE, but for a saved game currently valid and in use
 
 # create some (empty) directories/files
 mkdir -p src/ids/${GAME}
@@ -48,14 +49,14 @@ rm -f csvfiles.txt
 
 
 # find states name
-find "$DATA" -iname '*.txt' -print0 | xargs -0 cat -- | grep -wi states | sed -e's/.*[sS][tT][aA][tT][eE][sS]\(.*\)/\1/' | bbedit
+find "$DATA" -iname '*.txt' -print0 | xargs -0 cat - | grep -wi states | sed -e's/.*[sS][tT][aA][tT][eE][sS]\(.*\)/\1/' | bbedit
 # remove comment: replace pattern "//.*$" with ""
 # remove leading whitespaces: replace pattern "^\s+" with ""
 # remove lines that do not look adequate
 # split in single words: replace pattern "\s+" with "\n"
 # remove duplicates
 # clean up
-# append to states.txt
+# append hashes to states.txt
 # manually edit, CamelCase, cleanup etc.
 # append computed hashes to ids/common/states.c
 bbedit src/ids/common/states.c
@@ -74,6 +75,7 @@ bbedit csvfiles.txt
 cat csvfiles.txt | while read FILE; do bbedit "$FILE"; done
 # copy/append useful content line to a new file
 # beware, some will need to have their first column removed
+# remove leading spaces, replace '^[ \t]+' with ''
 # beware of INVALID characters especially in TEXT.CSV (replace '[\x00-\x09\x0b-\x1f]+' with '')
 # beware of INVALID lines especially in TEXT.CSV (replace '(^[^"].*\n)+' with '')
 # keep only first column (the label): replace pattern "^(.*?),.*$" with "\1"
@@ -86,7 +88,7 @@ bbedit words/${GAME}.txt
 # close words/${GAME}.txt
 
 # find all text file candidates
-find "$DATA" -type f \(  -iname '*.addtool' -o -iname '*.cfg' -o -iname '*.json' -o -iname '*.sf' -o -iname '*.sub' -o -iname '*.txt' -o -iname '*.txc' -o -iname '*.xml' \) > textfiles.txt
+find "$DATA" -type f \(  -iname '*.addtool' -o -iname '*.cfg' -o -iname '*.json' -o -iname '*.sf' -o -iname '*.sub' -o -iname '*.prp' -o -iname '*.txt' -o -iname '*.txc' -o -iname '*.xml' \) > textfiles.txt
 
 # remove non-text file candidates
 cat textfiles.txt | while read FILE; do file "$FILE" ; done | grep -v "ASCII text" | grep -v ": UTF-8 Unicode" | bbedit
@@ -97,20 +99,23 @@ bbedit textfiles.txt
 
 # this step is only required if file path are included as hash (e.g. lego worlds for .LXFML files). You may want to skip it otherwise
 # create files path file
-touch words/files/${GAME}.txt
+: > words/files/${GAME}.txt
 # get all files path, with both / and \ separators, with and without extension, with and without _DX## suffix
-(cd "$DATA"; for i in *; do (cd "$i"; find . ! -type d ! -name '.DS_Store'; find * ! -type d ! -name '.DS_Store'); done; for i in [dD][lL][cC]*; do (cd "$i"; find */*/. ! -type d ! -name '.DS_Store'); done) | awk '{ printf("%s\n", $0); gsub("/", "\\"); printf("%s\n", $0); }' | awk '{ print $0; n=split($0,w,"."); for (i=1;i<n; i++)printf("%s.",w[i]); printf("%s\n",w[n]) }' | awk '{ print $0; sub("\.DX[0-9]*$", ""); print $0 }'| sort -fu | bbedit
+(cd "$DATA"; for i in *; do (cd "$i"; find . ! -type d ! -name '.DS_Store'; find * ! -type d ! -name '.DS_Store'); done; ) | awk '{ printf("%s\n", $0); gsub("/", "\\"); printf("%s\n", $0); }' | awk '{ print $0; n=split($0,w,"."); for (i=1;i<n-1; i++)printf("%s.",w[i]); printf("%s\n",w[n-1]) }' | awk '{ print $0; sub("[.\\]DX[0-9]*$", ""); print $0 }'| sort -fu >> words/files/${GAME}.txt
+(cd "$DATA"; for i in [dD][lL][cC]*; do (cd "$i"; find */*/. ! -type d ! -name '.DS_Store'); done)                         | awk '{ printf("%s\n", $0); gsub("/", "\\"); printf("%s\n", $0); }' | awk '{ print $0; n=split($0,w,"."); for (i=1;i<n-1; i++)printf("%s.",w[i]); printf("%s\n",w[n-1]) }' | awk '{ print $0; sub("[.\\]DX[0-9]*$", ""); print $0 }'| sort -fu >> words/files/${GAME}.txt
 # get all directories path with both / and \ separators, with and without trailing / and \, with and without extension, with and without DX## suffix
-(cd "$DATA"; for i in *; do (cd "$i"; find . -type d; find * -type d); done; for i in [dD][lL][cC]*; do (cd "$i"; find */*/. -type d); done) | awk '{ printf("%s\n", $0); printf("%s/\n", $0); gsub("/", "\\"); printf("%s\n", $0); printf("%s\\\n", $0); }' | awk '{ print $0; n=split($0,w,"."); for (i=1;i<n; i++)printf("%s.",w[i]); printf("%s\n",w[n]) }' | awk '{ print $0; sub("\.DX[0-9]*$", ""); print $0 }'| sort -fu | bbedit
-# merge both into words/files/${GAME}.txt
+(cd "$DATA"; for i in *; do (cd "$i"; find . -type d; find * -type d); done; ) | awk '{ printf("%s\n", $0); printf("%s/\n", $0); gsub("/", "\\"); printf("%s\n", $0); printf("%s\\\n", $0); }' | awk '{ print $0; n=split($0,w,"."); for (i=1;i<n-1; i++)printf("%s.",w[i]); printf("%s\n",w[n-1]) }' | awk '{ print $0; sub("[._]DX[0-9]*$", ""); print $0 }'| sort -fu >> words/files/${GAME}.txt
+(cd "$DATA"; for i in [dD][lL][cC]*; do (cd "$i"; find */*/. -type d); done)   | awk '{ printf("%s\n", $0); printf("%s/\n", $0); gsub("/", "\\"); printf("%s\n", $0); printf("%s\\\n", $0); }' | awk '{ print $0; n=split($0,w,"."); for (i=1;i<n-1; i++)printf("%s.",w[i]); printf("%s\n",w[n-1]) }' | awk '{ print $0; sub("[._]DX[0-9]*$", ""); print $0 }'| sort -fu >> words/files/${GAME}.txt
+# …/*.lxfml files may be found as …/cache/*.sav, act accordinly
 bbedit words/files/${GAME}.txt
+"(^(.+)/cache/([^/]+)$)" to "\1\n\2/\3"
+"(^(.+)\\cache\\([^\\]+)$)" to "\1\n\2\\\3"
 # remove duplicates
 # save words/files/${GAME}.txt
 # close words/files/${GAME}.txt
 
-# get all words of all known text files:
-# ********* IMPORTANT: please let the window that will open (bbedit words.txt) frontmost until done *********
-bbedit words.txt; cat textfiles.txt | while read FILE; do (cat "$FILE"; echo) | bbedit --append; done
+# get all words of all known text/csv files:
+(cat textfiles.txt csvfiles.txt | while read FILE; do (cat "$FILE"; echo); done) | bbedit
 # remove duplicates
 # replace following patterns:
 #    pattern "[^-a-z0-9_/\.\\\n]+" with " "
@@ -128,8 +133,14 @@ bbedit words/${GAME}.txt
 # close words/${GAME}.txt
 
 # check for overridden labels (I never found any)
-cat textfiles.txt | while read FILE; do if grep -q "^\0: [0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f] [^ ]*" "$FILE"; then cat "$FILE"; fi; done | cut -d' ' -f2- | while read LINE; do HASH=$(echo $LINE | cut -d' ' -f1); LABEL=$(echo $LINE | cut -d' ' -f2-); COMPUTED=$(./hash -x "$LABEL"); if [ $COMPUTED != $HASH ]; then printf "{ 0x%s, gameAny, -1, 0x2, \"%s\", \"\", NULL }, \n" $HASH "$LABEL"; fi; done | sort -fu | bbedit
+cat textfiles.txt | while read FILE; do if grep -q "^\0: [0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f] [^ ]*" "$FILE"; then cat "$FILE"; echo;  fi; done | cut -d' ' -f2- | while read LINE; do HASH=$(echo $LINE | cut -d' ' -f1); LABEL=$(echo $LINE | cut -d' ' -f2-); COMPUTED=$(./hash -x "$LABEL"); if [ $COMPUTED != $HASH ]; then printf "{ 0x%s, gameAny, -1, 0x2, \"%s\", \"\", NULL }, \n" $HASH "$LABEL"; fi; done | sort -fu | bbedit
 # verify generated lines, if any
+
+# identify files that are in the 'DecimalHash,Label' form, leave their name in opened window
+cp csvfiles.txt /tmp/csvfiles.txt
+bbedit /tmp/csvfiles.txt
+# check for overridden labels (I never found any)
+cat /tmp/csvfiles.txt | while read FILE; do cat "$FILE"; echo; done | while read LINE; do HASHD=$(echo "$LINE" | cut -d',' -f1); HASH=$(echo '._8 '$HASHD' .x' | gmpcalc); LABEL=$(echo "$LINE" | cut -d',' -f2 | sed -e's/"//g' -e's/ //g'); COMPUTED=$(./hash -x "$LABEL"); if [ "$COMPUTED" != "$HASH" ]; then printf "{ 0x%s, gameAny, -1, 0x2, \"%s\", \"\", NULL }, \n" $HASH "$LABEL"; fi; done | sort -fu | bbedit
 
 # copy text from adequate Hopper Disassembler string section
 # paste in a new bbedit text document
@@ -151,8 +162,10 @@ bbedit words/${GAME}.txt
 cat words/${GAME}.txt >> dictionary.txt
 # if wanted, add the file paths. This makes the dictionary huge.
 cat words/files/${GAME}.txt >> dictionary.txt
-bbedit dictionary.txt
+# append all identified words for all games
+./legotool -C >> dictionary.txt
 # remove duplicates
+bbedit dictionary.txt
 # save dictionary.txt
 # close dictionary.txt
 
@@ -161,7 +174,7 @@ bbedit dictionary.txt
 #    remove duplicates in dictionary.txt
 
 # generate dictionary.c needed for rhash.
-cat dictionary.txt | sed -e's:\\:\\\\:g' -e's:":\\":g' | awk '{ printf("%s%c", $0, 0); }' | xargs -0 -n500 ./hash -- > dictionary.c
+cat dictionary.txt | sed -e's:\\:\\\\:g' -e's:":\\":g' | awk '{ printf("%s%c", $0, 0); }' | xargs -0 -n500 ./hash - > dictionary.c
 
 # update all binaries
 # compiler may fail when dictionary is too large
@@ -172,8 +185,10 @@ bbedit src/ids/globalKnownIDs.c
 # limit included files to common and files for the game
 
 # dump a saved game file, including empty saveItems, with name lookup
-./00-do.sh -z -g ${GAME} -d "$SAVE" | bbedit
-# append new saveItem mappings to src/ids/01-common/saveItems.c
+    ./00-do.sh -z -g ${GAME} -d "$SAVE" | bbedit
+# or
+    ./00-do.sh -z -g ${GAME} -d "$LIVE" | bbedit
+# append new saveItem mappings to src/ids/01-common/saveItems.*
 bbedit src/ids/01-common/saveItems.c
 # append new cheats mappings to src/ids/01-common/cheats.c
 bbedit src/ids/01-common/cheats.c
@@ -272,12 +287,21 @@ bbedit src/ids/${GAME}/ids.c
 # CHEATS*.TXT reveals cheats (i.e. items of the 'extras' menu) names
 # GALAXYMAPDESTINATIONS.TXT reveals GalaxyMapDestinations
 
-# finding LXFMLs:
-find $DATA -ipath '*/LXFML/MODELS/*/INDEXEDCONTENTS.TXT' -print0 | xargs -0 bbedit
-# locate "File .*\.LXFML" lines
+# finding LXFMLs, method 1:
+find $DATA -ipath '*/LXFML/MODELS/*/INDEXEDCONTENTS.TXT' -print0 | xargs -0 cat | bbedit
+# locate "^F\S* .*\.LXFML$" lines
 # append each of the .*.LXFML to the path that may be deduced from the file's directory name, remember the syntax leading "./" or "ADDITIONALCONTENT/*/./"
+# compute the hash, check if it matches
 
-# windbg: on Windows the MOST useful source for dictionary.txt, but the LESS funny. Does anyone actually use this debugger?
+# finding LXFMLs, method 2:
+find $DATA -ipath '*/TERRAFORM/LXFML/*.TXT' -exec grep -li UserPlaceable {} \; | while read FILE; do cat "$FILE"; echo; done | bbedit
+# remove CR, replace pattern '\x0d' with ''
+# locate ".*\.LXFML" lines
+# escape backslashes: replace pattern '\\' with '\\\\'
+# append each of the .*.LXFML line to the path root, remember the syntax leading "./" or "ADDITIONALCONTENT/*/./"
+# compute the hash, check if it matches
+
+# windbg: on Windows, the most useful source for dictionary.txt, but the less funny.
 # create directory c:\logs
 # launch game, prepare to load a game
 # rung windbg manually with options "-logo c:\path\to\some\log\file": "C:\Program Files (x86)\Windows Kits\10\Debuggers\x86\windbg.exe" -logo "C:\logs\windbg.log"

@@ -1,4 +1,5 @@
 /* this file is part of legotool, by xvi */
+
 // game1 Checkpoints
 { 0x9a3759c9, gameJurassic, 0xd4aad89e, 0x0, "TimeOfDay", "", NULL },
 { 0xc9a368c8, gameJurassic, 0xd4aad89e, 0x0, "HubLastVisited", "", NULL },

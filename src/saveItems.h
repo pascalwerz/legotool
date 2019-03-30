@@ -29,6 +29,7 @@ uintmax_t saveItemBlindBags;
 uintmax_t saveItemBounty;
 uintmax_t saveItemBricks;
 uintmax_t saveItemBridgeLevels;
+uintmax_t saveItemBuildBricks;
 uintmax_t saveItemCarbonite;
 uintmax_t saveItemCellTypes;
 uintmax_t saveItemChallengeGoal;
@@ -55,6 +56,7 @@ uintmax_t saveItemFamilyBuild;
 uintmax_t saveItemFirstOrder;
 uintmax_t saveItemGalaxyMapDestination;
 uintmax_t saveItemGeneral;
+uintmax_t saveItemGoldBrickMachine;
 uintmax_t saveItemGoldBrickMonumentCollectableDef;
 uintmax_t saveItemGoldBricks;
 uintmax_t saveItemGoldBricksVariables;
@@ -84,16 +86,19 @@ uintmax_t saveItemRedBricks;
 uintmax_t saveItemRedBricksVariables;
 uintmax_t saveItemRenovation;
 uintmax_t saveItemResistance;
+uintmax_t saveItemSaturnQuest;
 uintmax_t saveItemSaveStation;
 uintmax_t saveItemScavenger;
 uintmax_t saveItemSpaceShooterSystem;
 uintmax_t saveItemSpinjitzu;
+uintmax_t saveItemStickers;
 uintmax_t saveItemStoryComplete;
 uintmax_t saveItemStoryCompleteVariables;
 uintmax_t saveItemSuitTokens;
 uintmax_t saveItemSuitTokensVariables;
 uintmax_t saveItemTalisman;
 uintmax_t saveItemThemes;
+uintmax_t saveItemTraderBrick;
 uintmax_t saveItemTranslate;
 uintmax_t saveItemTrueHero;
 uintmax_t saveItemTrueHeroVariables;
@@ -105,16 +110,19 @@ uintmax_t saveItemWisdomWeapons;
 
 
 
-// function prototype for forEach...()
-// if the return value is not 0, the saveItem cycling functions (forEach...) stops processing remaining saveItems and returns that returned value.
-typedef uintmax_t (*forEachFunction)(context_t *context, uintmax_t userData);
+// function prototype for forEachSaveItem...()
+// if the return value is not 0, the saveItem cycling functions (forEachSaveItem...) stops processing remaining saveItems and returns that returned value.
+typedef uintmax_t (*forEachSaveItemFunction)(context_t *context, uintmax_t userData);
 
-// forEach...: saveItem cycling functions
+// forEachSaveItem...: saveItem cycling functions
 // if the value returned by f is not 0, the saveItem cycling functions (forEach...) stops processing remaining saveItems and returns that returned value.
-// if the data is invalid, the saveItem cycling functions process as must saveItems as possible and returns INVALID_DATA
+// if the data is invalid, the saveItem cycling functions process as much saveItems as possible and returns INVALID_DATA
+#ifndef INVALID_DATA
 #define INVALID_DATA	(INTMAX_MIN)
-uintmax_t forEachSaveItem(context_t *context, forEachFunction f, uintmax_t userData);
-uintmax_t forEachSaveItemWithID(context_t *context, forEachFunction f, uintmax_t userData, uintmax_t saveItemID);
-uintmax_t forEachSaveItemWithName(context_t *context, forEachFunction f, uintmax_t userData, char *saveItemName);
+#endif
+
+uintmax_t forEachSaveItem(context_t *context, forEachSaveItemFunction f, uintmax_t userData);
+uintmax_t forEachSaveItemWithID(context_t *context, forEachSaveItemFunction f, uintmax_t userData, uintmax_t saveItemID);
+uintmax_t forEachSaveItemWithName(context_t *context, forEachSaveItemFunction f, uintmax_t userData, char *saveItemName);
 
 #endif // _LEGOTOOL_SAVEITEMS_H_

@@ -1,4 +1,9 @@
 /* this file is part of legotool, by xvi */
+
+/*
+	03-FEB-2019		Updated with Mac Lego The Incredibles version
+*/
+
 // GAME01 Items
 { 0x0c407d35, gameIncredibles, 0x7d962a4b, 0x0, "Fire_Super", "", NULL },
 { 0xe24230eb, gameIncredibles, 0x7d962a4b, 0x0, "Light_Super", "", NULL },
@@ -1282,3 +1287,12 @@
 { 0x0d1dc2cd, gameIncredibles, 0xd4aad89e, 0x0, "PostStatus04", "", NULL },
 { 0x0d1dc2cc, gameIncredibles, 0xd4aad89e, 0x0, "PostStatus05", "", NULL },
 { 0x0d1dc2cf, gameIncredibles, 0xd4aad89e, 0x0, "PostStatus06", "", NULL },
+
+// DLC01 Characters
+{ 0xb6850261, gameIncredibles, 0x774d4f35, 0x0, "Dash_Vacation", "", NULL },
+{ 0x1450ca6c, gameIncredibles, 0x774d4f35, 0x0, "Jack_Jack_Vacation", "", NULL },
+{ 0x3e82c2ca, gameIncredibles, 0x774d4f35, 0x0, "Violet_Vacation", "", NULL },
+{ 0x78a8f2d5, gameIncredibles, 0x774d4f35, 0x0, "Elastigirl_Vacation", "", NULL },
+{ 0xfb028618, gameIncredibles, 0x774d4f35, 0x0, "Mr_Incredible_Vacation", "", NULL },
+{ 0xb7ba6550, gameIncredibles, 0x774d4f35, 0x0, "LuciusBest_Vacation", "", NULL },
+{ 0xc5cd02fd, gameIncredibles, 0x774d4f35, 0x0, "Veh_ElastigirlVacation_SpaceHopper", "", NULL },

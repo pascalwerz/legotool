@@ -1,4 +1,5 @@
 /* this file is part of legotool, by xvi */
+
 // dlc01 Characters
 { 0x43268b65, gameSuperHeroes2, 0x774d4f35, 0x0, "RetroGoTG_AletaOgord", "", NULL },
 { 0xf0e76420, gameSuperHeroes2, 0x774d4f35, 0x0, "RetroGoTG_Charlie27", "", NULL },

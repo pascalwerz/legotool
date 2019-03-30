@@ -39,8 +39,9 @@ done
 
 if [ "$1" = "" ]
 then
-  echo "usage: $0 directory" >&2
+  echo "usage: $0 [options] directory" >&2
   echo "       where directory contains all savegamedata files" >&2
+  echo "       for options, see legotool" >&2
   exit 1
 fi
 

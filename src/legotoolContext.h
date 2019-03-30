@@ -31,12 +31,14 @@ typedef struct _context_t
 	uintmax_t numberOfItemsID;
 	uintmax_t collectedID;
 	uintmax_t lockedID;
+	uintmax_t unlockedDepletedID;
 	uintmax_t cLoadSaveManager_DataID;
 	uintmax_t endMarkerID;
 
 // for current file
 	char *fileName;				// for current file
 	char *baseFileName;			// for current file, no path nor extension
+	char *fileExtension;		// for current file, only extension
 	mappedfile_t mappedFile;	// for current file
 	uintmax_t fileModified;		// for current file
 	uint8_t *fileData;			// for current file
@@ -88,8 +90,8 @@ typedef struct _context_t
 	int willSetDebugSave;
 	int willSetDebugSaveValue;
 // user selectable options
+	uintmax_t verbose;
 	int endianness;	// 0:native, 1:little, 2: big. Not sure if there's any big endian game version.
-	int verbose;
 	int convertIDs;
 	int dumpEmptySaveItems;
 	} context_t;

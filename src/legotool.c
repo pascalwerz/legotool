@@ -11,6 +11,7 @@
 #include <ctype.h>
 #include <libgen.h>
 #include <assert.h>
+#include <time.h>
 
 #include "legotool.h"
 
@@ -20,16 +21,22 @@
 #include "mappings.h"
 #include "ids.h"
 #include "games.h"
+#include "questLog.h"
 
 
 
-#define LEGOTOOL_VERSION "0.4"
-#define LEGOTOOL_DATE "16-NOV-2018"
+#define LEGOTOOL_VERSION "0.5"
+#define LEGOTOOL_DATE "30-MAR-2019"
 //
 //	** Version history: **
 //	Version	Date			Comment
 //
+//	0.5		30-MAR-2019		added "The Lego Movie 2" support
+//							dump header now includes timestamp to ease comparisons
+//							-v now increases verbosity level. file offsets and checksums are logged at verbosity level 2.
+//							-i now only update item if its quantity is already > 1
 //							removed -s option
+//							added -C option to ease development
 //	0.4		16-NOV-2018		-D argument now a complete specification
 //							for batman3, MainCoinTotal now changed in "CoinsVariables" instead of "Coins" saveItem
 //							removed overrides
@@ -38,12 +45,12 @@
 //	0.3.1	31-OCT-2018		minor corrections
 //							corrected -x functionality
 //							corrected completion or discoveries count display
-//	0.3		29-OCT-2018		completed villains support
+//	0.3		29-OCT-2018		completed "Villains" support
 //							various bug corrections
 //							enhanced world VOCollectables display
 //							added some missing mappings
 //							corrected some saveItems formats
-//	0.2		27-OCT-2018		added batman3, jurassic, forceawakens support
+//	0.2		27-OCT-2018		added "batman3", "jurassic", "forceawakens" support
 //							added -s option to legotool
 //							corrected load checksum computation
 //							mapping now use game instead of fileVersion
@@ -72,12 +79,12 @@ void updateFileChecksums(context_t *context)
 	if (checksumOnFile != newChecksum)
 		{
 		context->fileModified++;
-		if (context->verbose)
+		if (context->verbose >= 2)
 			printf("fileVersionChecksum: %s updated from 0x%08jx to 0x%08jx\n", context->baseFileName, (uintmax_t) checksumOnFile, (uintmax_t) newChecksum);
 		set32(context, 0x04, newChecksum);
 		}
 	else
-		if (context->verbose)
+		if (context->verbose >= 2)
 			printf("fileVersionChecksum: %s up to date, 0x%08jx\n", context->baseFileName, (uintmax_t) checksumOnFile);
 
 	// 2 - percentage checksum
@@ -86,12 +93,12 @@ void updateFileChecksums(context_t *context)
 	if (checksumOnFile != newChecksum)
 		{
 		context->fileModified++;
-		if (context->verbose)
+		if (context->verbose >= 2)
 			printf("percentageChecksum:  %s updated from 0x%08jx to 0x%08jx\n", context->baseFileName, (uintmax_t) checksumOnFile, (uintmax_t) newChecksum);
 		set32(context, 0x0c, newChecksum);
 		}
 	else
-		if (context->verbose)
+		if (context->verbose >= 2)
 			printf("percentageChecksum:  %s up to date, 0x%08jx\n", context->baseFileName, (uintmax_t) checksumOnFile);
 
 	// 3 - load checksum
@@ -101,12 +108,12 @@ void updateFileChecksums(context_t *context)
 	if (checksumOnFile != newChecksum)
 		{
 		context->fileModified++;
-		if (context->verbose)
+		if (context->verbose >= 2)
 			printf("loadChecksum:        %s updated from 0x%08jx to 0x%08jx\n", context->baseFileName, (uintmax_t) checksumOnFile, (uintmax_t) newChecksum);
 		set32(context, 0x10, newChecksum);
 		}
 	else
-		if (context->verbose)
+		if (context->verbose >= 2)
 			printf("loadChecksum:        %s up to date, 0x%08jx\n", context->baseFileName, (uintmax_t) checksumOnFile);
 }
 
@@ -142,7 +149,7 @@ void printID(const mapping* id)
 printf("{ ");
 printf("0x%08jx", id->key);
 printf(", ");
-printf("%2ju", id->game);
+printf("%2jd", id->game);
 printf(", ");
 if (((intmax_t) id->saveItemID) >= 0) printf("0x%08jx", id->saveItemID); else  printf("-%ju", -id->saveItemID);
 printf(", ");
@@ -202,6 +209,57 @@ for (int i = 0; i < context->knownIDsCount; i++)
 
 
 
+void dumpAllLabels(context_t *context)
+{
+for (int i = 0; i < context->knownIDsCount; i++)
+	{
+	printf("%s\n", context->knownIDs[i].label);
+	}
+}
+
+
+
+void dumpDuplicateIDs(context_t *context)
+{
+int headerPrinted;
+int alreadyListed;
+
+
+for (int i = 0; i < context->knownIDsCount; i++)
+	{
+	alreadyListed = 0;
+	headerPrinted = 0;
+
+	// do not handle already listed duplicates
+	for (int j = 0; j < i; j++)
+		if (context->knownIDs[i].key == context->knownIDs[j].key)
+			{
+			alreadyListed = 1;
+			}
+
+	if (!alreadyListed)
+		{
+		for (int j = i + 1; j < context->knownIDsCount; j++)
+			{
+			if (context->knownIDs[i].key == context->knownIDs[j].key)
+				{
+				if (!headerPrinted)
+					{
+					printf("Duplicate ID:\n");
+					printID(&context->knownIDs[i]);
+					printf("\n");
+					headerPrinted = 1;
+					}
+				printID(&context->knownIDs[j]);
+				printf("\n");
+				}
+			}
+		}
+	}
+}
+
+
+
 void usage(context_t *context, int exitCode)
 {
 const char *myBasename;
@@ -211,7 +269,7 @@ if (!myBasename) myBasename = context->myPath;
 
 fprintf(stderr, "usage: %s [-g gameName] [options] [file]\n", myBasename);
 fprintf(stderr, "         or:\n");
-fprintf(stderr, "       %s [-A|-N|-S]\n", myBasename);
+fprintf(stderr, "       %s [-A|-B|-C|-N]\n", myBasename);
 fprintf(stderr, "           options:\n");
 fprintf(stderr, "       -c value            set Coins[Variables]:MainCoinTotal to given value\n");
 fprintf(stderr, "       -d                  dump saveItems (after any modification)\n");
@@ -221,7 +279,7 @@ fprintf(stderr, "                           If any of saveItem, object, field or
 fprintf(stderr, "       -E endianness       sets endianness: 0:native, 1:little, 2:big (default: native)\n");
 fprintf(stderr, "                               probably useless\n");
 fprintf(stderr, "       -g gameName         select game, as legotool adapts some functionality according to game\n");
-fprintf(stderr, "                           The game name may be abbreviated as long as its uniquely identifies game\n");
+fprintf(stderr, "                           The game name may be abbreviated as long as it uniquely identifies game\n");
 fprintf(stderr, "                           Supported game names are:\n");
 fprintf(stderr, "                               batman3         for Lego Batman 3: Beyond Gotham\n");
 fprintf(stderr, "                               jurassic        for Lego Jurassic World\n");
@@ -234,9 +292,11 @@ fprintf(stderr, "                               incredibles     for Lego The Inc
 fprintf(stderr, "                               superheroes2    for Lego Marvel Super Heroes 2\n");
 fprintf(stderr, "                                               also: sh2\n");
 fprintf(stderr, "                               villains        for Lego DC Super-Villains\n");
-fprintf(stderr, "                           If -g is abent, game will default to Lego Worlds.\n");
-fprintf(stderr, "       -i quantity         mark LEGO Worlds items you unlocked as available with given quantity\n");
-fprintf(stderr, "                           updated items will be marked by a star\n");
+fprintf(stderr, "                               movie2          for The Lego Movie 2\n");
+fprintf(stderr, "                           If -g is absent, game will default to Lego Worlds.\n");
+fprintf(stderr, "       -i quantity         update LEGO Worlds items that are unlocked and present in 2+ quantity to given quantity\n");
+fprintf(stderr, "                           Depleted items are updated as one item availabe\n");
+fprintf(stderr, "                           Updated items will be marked by a star\n");
 fprintf(stderr, "                           Beware that some quests require some items to be absent from you inventory!\n");
 fprintf(stderr, "                           If multiple -i are given, only the last is executed.\n");
 fprintf(stderr, "       -I quantity         same as -i but for ALL inventory items, even ones you didn't discover yet\n");
@@ -244,6 +304,8 @@ fprintf(stderr, "                           Quests leading to discovery of new i
 fprintf(stderr, "       -k                  force checksums update (default is off but on if file is modified)\n");
 fprintf(stderr, "       -n                  do not convert IDs to names (default: convert IDs to names)\n");
 fprintf(stderr, "       -v                  verbose mode (default: off)\n");
+fprintf(stderr, "                           repeating -v adds a level of verbosity\n");
+fprintf(stderr, "                           checksums change are displayed at verbosity level 2+\n");
 fprintf(stderr, "       -V                  display %s version\n", myBasename);
 fprintf(stderr, "       -x value            set DebugSaveItem byte value\n");
 fprintf(stderr, "                           If multiple -x are given, only the last is executed.\n");
@@ -265,7 +327,10 @@ fprintf(stderr, "       -%% floatNumber      update completion percentage/discov
 fprintf(stderr, "\n");
 fprintf(stderr, "           options that do not operate on a file:\n");
 fprintf(stderr, "       -A                  dump all known IDs\n");
+fprintf(stderr, "       -B                  list duplicates IDs\n");
+fprintf(stderr, "       -C                  dump all known ID labels\n");
 fprintf(stderr, "       -N                  dump non matching known keys/label (except empty and overridden ones)\n");
+fprintf(stderr, "                           (useful to check mappings)\n");
 
 
 if (exitCode) exit(exitCode);
@@ -278,6 +343,8 @@ int main(int argc, char **argv)
 context_t context;
 int displayVersion = 0;
 int willDumpAllIDs = 0;
+int willDumpAllLabels = 0;
+int willDumpDuplicateIDs = 0;
 int willDumpNonMatchingIDs = 0;
 int ch;
 int loadDataAtEnd;
@@ -298,6 +365,7 @@ context.discoveryStateID        = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32
 context.numberOfItemsID         = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "NumberOfItems");
 context.collectedID             = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Collected");
 context.lockedID                = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Locked");
+context.unlockedDepletedID      = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "UnlockedDepleted");
 context.cLoadSaveManager_DataID = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "cLoadSaveManager_Data");
 context.endMarkerID     = 123456789;	// = 0x075bcd15 in hex, not a FNV-based ID
 
@@ -338,7 +406,7 @@ context.willSetCoinsValue = 0;
 
 qsort(context.knownIDs, context.knownIDsCount, sizeof(*context.knownIDs), hashCompareFunction);
 
-while ((ch = getopt(argc, argv, "%:Ac:dD:E:g:i:I:knNs:SvVx:zZ:?")) != -1)
+while ((ch = getopt(argc, argv, "%:ABCc:dD:E:g:i:I:knNs:SvVx:zZ:?")) != -1)
 	{
 	switch (ch)
 		{
@@ -348,6 +416,12 @@ while ((ch = getopt(argc, argv, "%:Ac:dD:E:g:i:I:knNs:SvVx:zZ:?")) != -1)
 		break;
 	case 'A':
 		willDumpAllIDs = 1;
+		break;
+	case 'B':
+		willDumpDuplicateIDs = 1;
+		break;
+	case 'C':
+		willDumpAllLabels = 1;
 		break;
 	case 'c':
 		context.willSetCoins = 1;
@@ -398,7 +472,7 @@ while ((ch = getopt(argc, argv, "%:Ac:dD:E:g:i:I:knNs:SvVx:zZ:?")) != -1)
 		willDumpNonMatchingIDs = 1;
 		break;
 	case 'v':
-		context.verbose = 1;
+		context.verbose++;
 		break;
 	case 'V':
 		displayVersion = 1;
@@ -427,10 +501,12 @@ argv += optind;
 if (displayVersion) printf("legotool version %s, %s\n", LEGOTOOL_VERSION, LEGOTOOL_DATE);
 
 // no-file operations
-if (willDumpAllIDs || willDumpNonMatchingIDs)
+if (willDumpAllIDs || willDumpAllLabels || willDumpDuplicateIDs || willDumpNonMatchingIDs)
 	{
 	if (argc) usage(&context, 1);
 	if (willDumpAllIDs) dumpAllIDs(&context);
+	if (willDumpAllLabels) dumpAllLabels(&context);
+	if (willDumpDuplicateIDs) dumpDuplicateIDs(&context);
 	if (willDumpNonMatchingIDs) dumpNonMatchingIDs(&context);
 
 	return 0;
@@ -482,7 +558,19 @@ while ((i < l) && (context.fileName[l - 1 - i] != '/')) i++;
 // remove extension
 j = 0;
 while ((j < i) && (context.fileName[l - 1 - j] != '.')) j++;
-if (j == i) j = -1;
+if (j == i)
+{
+	j = -1;
+	context.fileExtension = malloc(1);
+	if (context.fileExtension == NULL) { perror(NULL); exit(1); }
+	context.fileExtension[0] = 0;
+}
+else
+{
+	context.fileExtension = malloc(j + 1);
+	if (context.fileExtension == NULL) { perror(NULL); exit(1); }
+	strcpy(context.fileExtension, context.fileName + l - j);
+}
 
 context.baseFileName = malloc(i - j + 1);
 if (context.baseFileName == NULL) { perror(NULL); exit(1); }
@@ -501,9 +589,32 @@ else
 	context.loadOffset = 0x18;
 context.loadSize = 0;	// will be updated with each load block
 
+
+if (context.game == gameWorlds && context.willDump && !strcasecmp(context.baseFileName, "autosave") && !strcasecmp(context.fileExtension, "gamesave"))
+	{
+	uint8_t *data;
+	uintmax_t dataSize;
+
+	data = context.fileData;
+	dataSize = context.fileSize;
+	parseQuestLog(&context, &data, &dataSize);
+
+	return 0;
+	}
+
 if (context.willDump && (!context.willDumpBaseFilename || !strcasecmp(context.willDumpBaseFilename, context.baseFileName)))
 	{
+	time_t date;
+	char dateString[256];
+	
 	printf("******************** dump of %s ********************\n", context.fileName);
+	date = time(NULL);
+	if (ctime_r(&date, dateString) != NULL)
+		{
+		while (dateString[strlen(dateString) - 1] == '\n')
+			dateString[strlen(dateString) - 1] = '0';
+		printf("dumped on: %s\n", dateString);
+		}
 	printf("game: %s\n", gameIdentificationToName(context.game));
 	printf("fileVersion: %2ju, %f %% completion or discoveries count\n", context.fileVersion, context.filePercentage);
 	printf("\n");
@@ -533,7 +644,7 @@ for (loadDataAtEnd = 0; loadDataAtEnd == 0; )
 		exit(1);
 		}
 	// loop over load data blocks
-	if (context.verbose && context.willDump && (!context.willDumpBaseFilename || !strcasecmp(context.willDumpBaseFilename, context.baseFileName)))
+	if (context.verbose >= 2 && context.willDump && (!context.willDumpBaseFilename || !strcasecmp(context.willDumpBaseFilename, context.baseFileName)))
 		printf("at file offset 0x%jx:\n", context.dataOffset);
 
 	// current load data block is at context.dataOffset, you must at least:
