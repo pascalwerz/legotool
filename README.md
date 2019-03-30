@@ -20,11 +20,11 @@ More, for all these games, only a limited number of files are supported:
 - the *GAME\*.SAVEGAMEDATA* and *DLC\*.SAVEGAMEDATA* inside the *SLOT\** folders. These files do not hold everything about a saved game but hold most progress information.
 - for Lego Worlds, CONTENT/S[1-4]-SYSGLOBAL/2500304796/QL/AUTOSAVE.GAMESAVE can be dumped but not modified.
 
-
-
 This tool exists because most LEGO games store saved games in similar way, heavily relying on FNV hashs (see [About Lego's FNV hash](About Lego's FNV hash.md))
 
-**Tools**
+
+
+Tools**
 
 *legotool* is the tool to read and write the *.savegamedata* files. Other tools help to build it.
 
