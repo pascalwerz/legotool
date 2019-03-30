@@ -24,7 +24,7 @@ This tool exists because most LEGO games store saved games in similar way, heavi
 
 
 
-Tools**
+**Tools**
 
 *legotool* is the tool to read and write the *.savegamedata* files. Other tools help to build it.
 
