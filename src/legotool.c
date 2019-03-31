@@ -25,12 +25,14 @@
 
 
 
-#define LEGOTOOL_VERSION "0.5"
-#define LEGOTOOL_DATE "30-MAR-2019"
+#define LEGOTOOL_VERSION "0.5.1"
+#define LEGOTOOL_DATE "31-MAR-2019"
 //
 //	** Version history: **
 //	Version	Date			Comment
 //
+//	0.5.1	31-MAR-2019		CamelCase corrections to movie2/id.c
+//                          -g option made mandatory again
 //	0.5		30-MAR-2019		added "The Lego Movie 2" support
 //							dump header now includes timestamp to ease comparisons
 //							-v now increases verbosity level. file offsets and checksums are logged at verbosity level 2.
@@ -267,7 +269,7 @@ const char *myBasename;
 myBasename = basename((char *) context->myPath);
 if (!myBasename) myBasename = context->myPath;
 
-fprintf(stderr, "usage: %s [-g gameName] [options] [file]\n", myBasename);
+fprintf(stderr, "usage: %s -g gameName [options] [file]\n", myBasename);
 fprintf(stderr, "         or:\n");
 fprintf(stderr, "       %s [-A|-B|-C|-N]\n", myBasename);
 fprintf(stderr, "           options:\n");
@@ -279,7 +281,7 @@ fprintf(stderr, "                           If any of saveItem, object, field or
 fprintf(stderr, "       -E endianness       sets endianness: 0:native, 1:little, 2:big (default: native)\n");
 fprintf(stderr, "                               probably useless\n");
 fprintf(stderr, "       -g gameName         select game, as legotool adapts some functionality according to game\n");
-fprintf(stderr, "                           The game name may be abbreviated as long as it uniquely identifies game\n");
+fprintf(stderr, "                           The game name may be abbreviated as long as it uniquely identifies a game\n");
 fprintf(stderr, "                           Supported game names are:\n");
 fprintf(stderr, "                               batman3         for Lego Batman 3: Beyond Gotham\n");
 fprintf(stderr, "                               jurassic        for Lego Jurassic World\n");
@@ -293,7 +295,6 @@ fprintf(stderr, "                               superheroes2    for Lego Marvel 
 fprintf(stderr, "                                               also: sh2\n");
 fprintf(stderr, "                               villains        for Lego DC Super-Villains\n");
 fprintf(stderr, "                               movie2          for The Lego Movie 2\n");
-fprintf(stderr, "                           If -g is absent, game will default to Lego Worlds.\n");
 fprintf(stderr, "       -i quantity         update LEGO Worlds items that are unlocked and present in 2+ quantity to given quantity\n");
 fprintf(stderr, "                           Depleted items are updated as one item availabe\n");
 fprintf(stderr, "                           Updated items will be marked by a star\n");
@@ -356,7 +357,7 @@ assert(sizeof(uintmax_t) > sizeof(uint32_t));
 context.myPath = argv[0];
 context.knownIDs = globalKnownIDs;
 context.knownIDsCount = globalKnownIDsCount;
-context.game = gameWorlds;
+context.game = gameNotDefined;
 
 context.defaultID               = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Default");
 context.unknownFlagID           = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Unknown");

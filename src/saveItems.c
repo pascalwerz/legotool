@@ -299,7 +299,7 @@ objectRule_t rules[] =
 	{ gameMovie2,       &saveItemStickers,                        objectVersion4488,  "Xd" },
 	{ gameMovie2,       &saveItemGoldBrickMachine,                objectVersion4488,  "Xd" },
 	{ gameMovie2,       &saveItemBuildBricks,                     objectVersion4488,  "d" },
-	{ gameMovie2,       &saveItemVOCollectables,                  objectVersion4488,  "X" },
+	{ gameMovie2,       &saveItemVOCollectables,                  objectVersion4488,  "t" },	// not sure wether it's "t" or "d". We'll see.
 	{ gameMovie2,       &saveItemCellTypes,                       objectVersion4488,  "Xd" },
 	{ gameMovie2,       &saveItemBricks,                          objectVersion4488,  "X" },
 	{ gameMovie2,       &saveItemGoldBricks,                      objectVersion4488,  "X" },
