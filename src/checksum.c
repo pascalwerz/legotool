@@ -24,7 +24,7 @@ fprintf(stderr, "       -e endOffset      file offset of last bytes included in 
 fprintf(stderr, "       -l length         number of bytes included in checksum, defaults to 'up to end of file'.\n");
 fprintf(stderr, "       -r checksum       search file for a single block of one or more bytes that match the given checksum.\n");
 fprintf(stderr, "                         with -r, -s indicates the lowest limit for the block start.\n");
-fprintf(stderr, "       All of -s, -e and -l values can be input as decimal or as hexadecimal with leading 0x'.\n");
+fprintf(stderr, "       All of -s, -e and -l values can be input as decimal or as hexadecimal with leading 0x.\n");
 fprintf(stderr, "\n");
 fprintf(stderr, "           if -s is beyond end of file, an error occurs.\n");
 fprintf(stderr, "           -l or -e are mutually exclusive and are truncated to end of file\n");

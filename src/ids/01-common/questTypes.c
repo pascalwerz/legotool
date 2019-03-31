@@ -1,5 +1,6 @@
 /* this file is part of legotool, by xvi */
-// quest types for LEGO worlds
+
+// quest types for LEGO Worlds, used in CONTENT/S[1-4]-SYSGLOBAL/2500304796/QL/AUTOSAVE.GAMESAVE
 { 0x6017b64b, gameAny, 0x7f34be55, 0x0, "Brawl", "", NULL },
 { 0x01b967b7, gameAny, 0x7f34be55, 0x0, "Build", "", NULL },
 { 0x018f8d89, gameAny, 0x7f34be55, 0x0, "Costume", "", NULL },

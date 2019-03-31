@@ -1,4 +1,5 @@
 /* this file is part of legotool, by xvi */
+
 // common Cheats
 { 0xcebccd1f, gameAny, 0xef3a5c65, 0x0, "Cheat_8_Bit_Music", "", NULL },
 { 0xb95ff8a6, gameAny, 0xef3a5c65, 0x0, "Cheat_AmberBrick_Detector", "", NULL },

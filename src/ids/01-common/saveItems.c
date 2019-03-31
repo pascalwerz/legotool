@@ -1,4 +1,5 @@
 /* this file is part of legotool, by xvi */
+
 // all known saveItems ids
 { 0x10ca236c, gameAny, -1, 0x0, "Achievements_DLC1", "", NULL },
 { 0x5081eb33, gameAny, -1, 0x0, "Achievements_Main", "", NULL },

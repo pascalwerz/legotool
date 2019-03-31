@@ -1,4 +1,5 @@
 /* this file is part of legotool, by xvi */
+
 //     Checkpoint states have been found one of:
 // NotSpawned Spawned
 // NotCompleted Completed
@@ -112,7 +113,6 @@
 // Show DontShow
 // and transitions
 // notset day dusk night dawn
-
 
 { 0x0b3d1637, gameAny, -1, 0x0, "01_Nublar", "", NULL },
 { 0x22e8cbe9, gameAny, -1, 0x0, "02_Sorna", "", NULL },

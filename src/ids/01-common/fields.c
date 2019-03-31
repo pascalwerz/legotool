@@ -1,4 +1,5 @@
 /* this file is part of legotool, by xvi */
+
 // Not many different fields, isn't it?
 { 0x64021268, gameAny, -1, 0x0, "BestTime", "", NULL },
 { 0xd8d82e0e, gameAny, -1, 0x0, "Collected", "", NULL }, 			// also fake fieldID for objectVersion42244

@@ -1,4 +1,5 @@
 /* this file is part of legotool, by xvi */
+
 // used in Metrics save item
 { 0x3d2a4acb, gameAny, 0xd02558b0, 0x0, "Cheat_Carnival", "", NULL },
 { 0xbf8c1007, gameAny, 0xd02558b0, 0x0, "Cheat_CombatBarRegen", "", NULL },
