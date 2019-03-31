@@ -33,6 +33,8 @@
 //
 //	0.5.1	31-MAR-2019		CamelCase corrections to movie2/id.c
 //                          -g option made mandatory again
+//                          completed saveItems format for movie2
+//                          updated dump avoidance logic for useless/empty saveItems
 //	0.5		30-MAR-2019		added "The Lego Movie 2" support
 //							dump header now includes timestamp to ease comparisons
 //							-v now increases verbosity level. file offsets and checksums are logged at verbosity level 2.
@@ -397,7 +399,7 @@ context.willRefillQuantity = 1;
 context.convertIDs = 1;
 context.willZapValue = 0;
 context.willZapString = NULL;
-context.dumpEmptySaveItems = 0;
+context.dumpOnlyUsefulAndNonEmptySaveItems = 1;
 context.willUpdatePercentage = 0;
 context.willUpdatePercentageValue = 0;
 context.willSetDebugSave = 0;
@@ -483,7 +485,7 @@ while ((ch = getopt(argc, argv, "%:ABCc:dD:E:g:i:I:knNs:SvVx:zZ:?")) != -1)
 		context.willSetDebugSaveValue = strtoumax(optarg, NULL, 0);
 		break;
 	case 'z':
-		context.dumpEmptySaveItems = 1;
+		context.dumpOnlyUsefulAndNonEmptySaveItems = 0;
 		break;
 	case 'Z':
 		context.willZapValue = 1;

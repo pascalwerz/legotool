@@ -93,7 +93,7 @@ typedef struct _context_t
 	uintmax_t verbose;
 	int endianness;	// 0:native, 1:little, 2: big. Not sure if there's any big endian game version.
 	int convertIDs;
-	int dumpEmptySaveItems;
+	int dumpOnlyUsefulAndNonEmptySaveItems;
 	} context_t;
 
 
