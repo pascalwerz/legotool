@@ -31,6 +31,7 @@
 //	** Version history: **
 //	Version	Date			Comment
 //
+//                          -s option added
 //	0.5.1	31-MAR-2019		CamelCase corrections to movie2/id.c
 //                          -g option made mandatory again
 //                          completed saveItems format for movie2
@@ -306,6 +307,7 @@ fprintf(stderr, "       -I quantity         same as -i but for ALL inventory ite
 fprintf(stderr, "                           Quests leading to discovery of new items are NOT updated.\n");
 fprintf(stderr, "       -k                  force checksums update (default is off but on if file is modified)\n");
 fprintf(stderr, "       -n                  do not convert IDs to names (default: convert IDs to names)\n");
+fprintf(stderr, "       -s                  print save item name in front of values (default: no)\n");
 fprintf(stderr, "       -v                  verbose mode (default: off)\n");
 fprintf(stderr, "                           repeating -v adds a level of verbosity\n");
 fprintf(stderr, "                           checksums change are displayed at verbosity level 2+\n");
@@ -396,6 +398,7 @@ context.willDump = 0;
 context.willRefillAll = 0;
 context.willRefillMineOnly = 0;
 context.willRefillQuantity = 1;
+context.willPrintSaveItemName = 0;
 context.convertIDs = 1;
 context.willZapValue = 0;
 context.willZapString = NULL;
@@ -409,7 +412,7 @@ context.willSetCoinsValue = 0;
 
 qsort(context.knownIDs, context.knownIDsCount, sizeof(*context.knownIDs), hashCompareFunction);
 
-while ((ch = getopt(argc, argv, "%:ABCc:dD:E:g:i:I:knNs:SvVx:zZ:?")) != -1)
+while ((ch = getopt(argc, argv, "%:ABCc:dD:E:g:i:I:knNsSvVx:zZ:?")) != -1)
 	{
 	switch (ch)
 		{
@@ -473,6 +476,9 @@ while ((ch = getopt(argc, argv, "%:ABCc:dD:E:g:i:I:knNs:SvVx:zZ:?")) != -1)
 		break;
 	case 'N':
 		willDumpNonMatchingIDs = 1;
+		break;
+	case 's':
+		context.willPrintSaveItemName = 1;
 		break;
 	case 'v':
 		context.verbose++;
@@ -619,7 +625,8 @@ if (context.willDump && (!context.willDumpBaseFilename || !strcasecmp(context.wi
 		printf("dumped on: %s\n", dateString);
 		}
 	printf("game: %s\n", gameIdentificationToName(context.game));
-	printf("fileVersion: %2ju, %f %% completion or discoveries count\n", context.fileVersion, context.filePercentage);
+	printf("fileVersion: %2ju\n", context.fileVersion);
+	printf("completion percentage (or discoveries count): %f\n", context.filePercentage);
 	printf("\n");
 	}
 

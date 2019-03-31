@@ -67,8 +67,10 @@ void dumpField(context_t *context, object_t *data, const char *valueFormat, int 
 	struct tm tm;
 	char timeString[64];
 
+	if (context->willPrintSaveItemName)
+		printf("%s:", textForID(context, context->saveItemID1 & 0xffffffff, "%%%08jx"));
 	printf("%s", textForID(context, objectObject(context, data) & 0xffffffff, "%08jx"));
-	printf(".%s ", textForID(context, objectField(context, data) & 0xffffffff, "%08jx"));
+	printf(".%s=", textForID(context, objectField(context, data) & 0xffffffff, "%08jx"));
 
 	if (shouldLookup)
 		strcpy(tmp, textForID(context, objectProbationalValue(context, data) & 0xffffffff, valueFormat));

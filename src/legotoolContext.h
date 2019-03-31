@@ -85,6 +85,7 @@ typedef struct _context_t
 	uintmax_t willDumpObjectID;
 	uintmax_t willDumpFieldID;
 	uintmax_t willDumpValue;
+	int willPrintSaveItemName;
 	int willUpdatePercentage;
 	float willUpdatePercentageValue;
 	int willSetDebugSave;
