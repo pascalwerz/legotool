@@ -64,11 +64,11 @@ typedef struct _context_t
 // for current saveItem in current data
 	uintmax_t saveItemOffset;			// for current saveItem in current file
 	uintmax_t saveItemDataOffset;		// for current saveItem in current file
-	uintmax_t saveItemDataSize;		// for current saveItem in current file
+	uintmax_t saveItemDataSize;			// for current saveItem in current file
 	uintmax_t saveItemID1;				// for current saveItem in current file
 	uintmax_t saveItemID2;				// for current saveItem in current file
 	uintmax_t saveItemObjectVersion;	// for current saveItem in current file. This is a personal numbering, nothing official.
-	char *saveItemObjectFormat;	// for current saveItem in current file
+	char *saveItemObjectFormat;			// for current saveItem in current file
 
 // user requestable functionalities
 	int willRefillAll;
@@ -94,7 +94,7 @@ typedef struct _context_t
 	uintmax_t verbose;
 	int endianness;	// 0:native, 1:little, 2: big. Not sure if there's any big endian game version.
 	int convertIDs;
-	int dumpOnlyUsefulAndNonEmptySaveItems;
+	int dumpOnlyUsefulNonEmptySaveItems;
 	} context_t;
 
 

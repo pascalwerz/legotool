@@ -136,7 +136,7 @@ uintmax_t dumpFormatted(context_t *context)
 	uintmax_t printedCount;
 
 
-	if (context->saveItemDataSize == 0 && context->dumpOnlyUsefulAndNonEmptySaveItems)
+	if (context->saveItemDataSize == 0 && context->dumpOnlyUsefulNonEmptySaveItems)
 		return 0;
 
 	count = context->saveItemDataSize / (objectSize(context) * 1);
@@ -233,7 +233,7 @@ uintmax_t dumpJumpToSystem(context_t *context)
 	if (context->willDumpSaveItemID != ID_WILDCARD || context->willDumpObjectID != ID_WILDCARD || context->willDumpFieldID != ID_WILDCARD || context->willDumpValue != ID_WILDCARD)
 		return 0;
 
-	if (context->dumpOnlyUsefulAndNonEmptySaveItems)
+	if (context->dumpOnlyUsefulNonEmptySaveItems)
 		return 0;
 
 	if (context->verbose >= 2)
@@ -267,7 +267,7 @@ uintmax_t dumpStream(context_t *context)
 	if (context->willDumpSaveItemID != ID_WILDCARD || context->willDumpObjectID != ID_WILDCARD || context->willDumpFieldID != ID_WILDCARD || context->willDumpValue != ID_WILDCARD)
 		return 0;
 
-	if (context->dumpOnlyUsefulAndNonEmptySaveItems)
+	if (context->dumpOnlyUsefulNonEmptySaveItems)
 		return 0;
 
 	if (context->verbose >= 2)
@@ -295,7 +295,7 @@ uintmax_t dumpDont(context_t *context)
 	if (context->willDumpSaveItemID != ID_WILDCARD || context->willDumpObjectID != ID_WILDCARD || context->willDumpFieldID != ID_WILDCARD || context->willDumpValue != ID_WILDCARD)
 		return 0;
 
-	if (context->dumpOnlyUsefulAndNonEmptySaveItems)	// even if size is non-zero, don't dump if empty saveItems are not dumped
+	if (context->dumpOnlyUsefulNonEmptySaveItems)	// even if size is non-zero, don't dump if empty saveItems are not dumped
 		return 0;
 
 	if (context->verbose >= 2)
@@ -325,7 +325,7 @@ uintmax_t dump24(context_t *context)
 	if (context->willDumpSaveItemID != ID_WILDCARD || context->willDumpObjectID != ID_WILDCARD || context->willDumpFieldID != ID_WILDCARD || context->willDumpValue != ID_WILDCARD)
 		return 0;
 
-	if (context->dumpOnlyUsefulAndNonEmptySaveItems)
+	if (context->dumpOnlyUsefulNonEmptySaveItems)
 		return 0;
 
 	if (context->verbose >= 2)
@@ -363,7 +363,7 @@ uintmax_t dump4(context_t *context)
 	if (context->willDumpSaveItemID != ID_WILDCARD || context->willDumpObjectID != ID_WILDCARD || context->willDumpFieldID != ID_WILDCARD || context->willDumpValue != ID_WILDCARD)
 		return 0;
 
-	if (context->dumpOnlyUsefulAndNonEmptySaveItems)
+	if (context->dumpOnlyUsefulNonEmptySaveItems)
 		return 0;
 
 	if (context->verbose >= 2)
@@ -401,7 +401,7 @@ uintmax_t dump2(context_t *context)
 	if (context->willDumpSaveItemID != ID_WILDCARD || context->willDumpObjectID != ID_WILDCARD || context->willDumpFieldID != ID_WILDCARD || context->willDumpValue != ID_WILDCARD)
 		return 0;
 
-	if (context->dumpOnlyUsefulAndNonEmptySaveItems)
+	if (context->dumpOnlyUsefulNonEmptySaveItems)
 		return 0;
 
 	if (context->verbose >= 2)
@@ -439,7 +439,7 @@ uintmax_t dump1(context_t *context)
 	if (context->willDumpSaveItemID != ID_WILDCARD || context->willDumpObjectID != ID_WILDCARD || context->willDumpFieldID != ID_WILDCARD || context->willDumpValue != ID_WILDCARD)
 		return 0;
 
-	if (context->dumpOnlyUsefulAndNonEmptySaveItems)
+	if (context->dumpOnlyUsefulNonEmptySaveItems)
 		return 0;
 
 	if (context->verbose >= 2)

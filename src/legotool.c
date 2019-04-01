@@ -31,7 +31,7 @@
 //	** Version history: **
 //	Version	Date			Comment
 //
-//                          -s option added
+//  0.5.2	31-MAR-2019     -s option added
 //	0.5.1	31-MAR-2019		CamelCase corrections to movie2/id.c
 //                          -g option made mandatory again
 //                          completed saveItems format for movie2
@@ -402,7 +402,7 @@ context.willPrintSaveItemName = 0;
 context.convertIDs = 1;
 context.willZapValue = 0;
 context.willZapString = NULL;
-context.dumpOnlyUsefulAndNonEmptySaveItems = 1;
+context.dumpOnlyUsefulNonEmptySaveItems = 1;
 context.willUpdatePercentage = 0;
 context.willUpdatePercentageValue = 0;
 context.willSetDebugSave = 0;
@@ -491,7 +491,7 @@ while ((ch = getopt(argc, argv, "%:ABCc:dD:E:g:i:I:knNsSvVx:zZ:?")) != -1)
 		context.willSetDebugSaveValue = strtoumax(optarg, NULL, 0);
 		break;
 	case 'z':
-		context.dumpOnlyUsefulAndNonEmptySaveItems = 0;
+		context.dumpOnlyUsefulNonEmptySaveItems = 0;
 		break;
 	case 'Z':
 		context.willZapValue = 1;

@@ -1,4 +1,4 @@
-(**important: legotool is developed on macOS and not tested on any other platform**, but should be compilable on other platforms with little or reasonable effort)
+(**important: legotool is developed on macOS and not tested on any other platform**, but should be compilable on other platforms with little or reasonable effort. Your feedback is welcome.)
 
 Here are my command line tools to analyse and modify saved game files for following Lego games:
 
