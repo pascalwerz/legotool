@@ -35,6 +35,6 @@ The loadVersion is the version of the *game's load*, not the shell's one. The sh
 
 You may also interpret a version 2 shell as a version 1 shell were the load starts with its own length-4.
 
-What the "*percentage*" expresses depends on game and file. While it is specified here as a float and while Lego Worlds indeed stores the discoveries count here as a float, nothing prevents using it as a 4 bytes integer, or any 4 bytes format, as its checksum does not depends on the interpretation of the data, only on its bytes. It looks like this float field is used to present the completion percentage/discoveries count at a game slot selection dialog without analysing the load.
+What the "*percentage*" expresses depends on game and file. While it is specified here as a float and while Lego Worlds indeed stores the discoveries count here as a float, nothing prevents using it as a 4 bytes integer, or any 4 bytes format, as its checksum does not depend on the interpretation of the data, only on its bytes. It looks like this float field is used to present the completion percentage/discoveries count at a game slot selection dialog without analysing the load.
 
 It is frequent to have some data present *after* the load, presumably for padding purpose.
