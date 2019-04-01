@@ -25,13 +25,13 @@
 
 
 
-#define LEGOTOOL_VERSION "0.5.1"
-#define LEGOTOOL_DATE "31-MAR-2019"
+#define LEGOTOOL_VERSION "0.5.2"
+#define LEGOTOOL_DATE "01-APR-2019"
 //
 //	** Version history: **
 //	Version	Date			Comment
 //
-//  0.5.2	31-MAR-2019     -s option added
+//  0.5.2	01-APR-2019     -s option added
 //	0.5.1	31-MAR-2019		CamelCase corrections to movie2/id.c
 //                          -g option made mandatory again
 //                          completed saveItems format for movie2
