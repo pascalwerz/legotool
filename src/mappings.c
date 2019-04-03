@@ -11,7 +11,7 @@
 
 
 // on success, returns 0
-int IDForText(context_t *context, uintmax_t *resultID, const char *text)
+int IDForText(context_t *context, uintmax_t *result, const char *text)
 {
 	uintmax_t hash;
 	mapping * map;
@@ -23,7 +23,7 @@ int IDForText(context_t *context, uintmax_t *resultID, const char *text)
 	if (strlen(text) >= 3 && text[0] == '%' && text[1] == '%')
 		{
 		* (float *) &f32 = strtof(text + 2, &endPointer);
-		if (text[2] && endPointer[0] == 0) { *resultID = f32; return 0; }
+		if (text[2] && endPointer[0] == 0) { *result = f32; return 0; }
 
 		return -1;
 		}
@@ -32,7 +32,7 @@ int IDForText(context_t *context, uintmax_t *resultID, const char *text)
 	if (strlen(text) >= 2 && text[0] == '%')
 		{
 		hash = strtoumax(text + 1, &endPointer, 0);
-		if (text[1] && endPointer[0] == 0) { *resultID = hash & 0xffffffff; return 0; }
+		if (text[1] && endPointer[0] == 0) { *result = hash; return 0; }
 
 		return -1;
 		}
@@ -44,20 +44,20 @@ int IDForText(context_t *context, uintmax_t *resultID, const char *text)
 	if (!map) map = keyFind(context, hash, ID_WILDCARD, ID_WILDCARD);				// if still not found, find generic mapping
 	if (map)
 		{
-		if (map->label  && map->label[0]  && !strcasecmp(map->label, text)) { *resultID = hash; return 0; }
-		if (map->string && map->string[0] && !strcasecmp(map->string, text)) { *resultID = hash; return 0; }
+		if (map->label  && map->label[0]  && !strcasecmp(map->label, text)) { *result = hash; return 0; }
+		if (map->string && map->string[0] && !strcasecmp(map->string, text)) { *result = hash; return 0; }
 		}
 	for (uintmax_t i = 0; i < context->knownIDsCount; i++)										// no non-empty match found find first matching label/string
 		{
-		if (context->knownIDs[i].label  && context->knownIDs[i].label[0]  && !strcasecmp(context->knownIDs[i].label, text)) { *resultID = context->knownIDs[i].key; return 0; }
-		if (context->knownIDs[i].string && context->knownIDs[i].string[0] && !strcasecmp(context->knownIDs[i].string, text)) { *resultID = context->knownIDs[i].key; return 0; }
+		if (context->knownIDs[i].label  && context->knownIDs[i].label[0]  && !strcasecmp(context->knownIDs[i].label, text)) { *result = context->knownIDs[i].key; return 0; }
+		if (context->knownIDs[i].string && context->knownIDs[i].string[0] && !strcasecmp(context->knownIDs[i].string, text)) { *result = context->knownIDs[i].key; return 0; }
 		}
 
-	if (!strcmp(text, "*")) {*resultID = ID_WILDCARD; return 0; }
+	if (!strcmp(text, "*")) {*result = ID_WILDCARD; return 0; }
 
 	// last chance, check if it is a number, as if preceded by '%'
 	hash = strtoumax(text, &endPointer, 0);
-	if (text[0] && endPointer[0] == 0) { *resultID = hash & 0xffffffff; return 0; }
+	if (text[0] && endPointer[0] == 0) { *result = hash & 0xffffffff; return 0; }
 
 	return -1;	// text could not be converted
 }
