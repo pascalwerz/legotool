@@ -134,6 +134,9 @@ uintmax_t dumpFormatted(context_t *context)
 	char *format;
 	int hasTarget;
 	uintmax_t printedCount;
+	uintmax_t lastPrintedObjectID;
+	uintmax_t lastPrintedFieldID;
+
 
 
 	if (context->saveItemDataSize == 0 && context->dumpOnlyUsefulNonEmptySaveItems)
@@ -170,6 +173,8 @@ uintmax_t dumpFormatted(context_t *context)
 	format = context->saveItemObjectFormat;
 	formatLength = strlen(format);
 
+	lastPrintedObjectID = ID_WILDCARD;
+	lastPrintedFieldID = ID_WILDCARD;
 	printedCount = 0;
 	for (uintmax_t i = 0; i < count; i++)
 		{
@@ -184,8 +189,11 @@ uintmax_t dumpFormatted(context_t *context)
 		if (objectProbationalValue(context, field) != context->willDumpValue && context->willDumpValue != ID_WILDCARD)
 			continue;
 
-		if ((i % formatLength) == 0 && (printedCount != 0) && (formatLength > 1))
+		if ((printedCount != 0) && (lastPrintedObjectID != objectObject(context, field)) && (lastPrintedFieldID != objectField(context, field)))
 			printf("\n");
+
+		lastPrintedObjectID = objectObject(context, field);
+		lastPrintedFieldID = objectField(context, field);
 
 		printf("\t");
 

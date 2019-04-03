@@ -25,17 +25,19 @@
 
 
 
-#define LEGOTOOL_VERSION "0.5.2"
+#define LEGOTOOL_VERSION "0.5.3"
 #define LEGOTOOL_DATE "01-APR-2019"
 //
 //	** Version history: **
 //	Version	Date			Comment
 //
+//  0.5.3	02-APR-2019		simplified yet made more adequate the separator line logic in dumpFormatted()
+//							stop truncating zap value to 32-bits. This allows setting Coins to more than 0xffffffff (4294967295)
 //  0.5.2	01-APR-2019     -s option added
 //	0.5.1	31-MAR-2019		CamelCase corrections to movie2/id.c
-//                          -g option made mandatory again
-//                          completed saveItems format for movie2
-//                          updated dump avoidance logic for useless/empty saveItems
+//							-g option made mandatory again
+//							completed saveItems format for movie2
+//							updated dump avoidance logic for useless/empty saveItems
 //	0.5		30-MAR-2019		added "The Lego Movie 2" support
 //							dump header now includes timestamp to ease comparisons
 //							-v now increases verbosity level. file offsets and checksums are logged at verbosity level 2.
