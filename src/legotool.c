@@ -25,14 +25,16 @@
 
 
 
-#define LEGOTOOL_VERSION "0.5.3"
-#define LEGOTOOL_DATE "01-APR-2019"
+#define LEGOTOOL_VERSION "0.5.4"
+#define LEGOTOOL_DATE "12-APR-2019"
 //
 //	** Version history: **
 //	Version	Date			Comment
 //
-//  0.5.3	02-APR-2019		simplified yet made more adequate the separator line logic in dumpFormatted()
+//	0.5.4	12-APR-2019		Added Lego Movie 2 DLC1 ids
+//  0.5.3	04-APR-2019		simplified yet made more adequate the separator line logic in dumpFormatted()
 //							stop truncating zap value to 32-bits. This allows setting Coins to more than 0xffffffff (4294967295)
+//							corrected some movie2 ids CamelCases
 //  0.5.2	01-APR-2019     -s option added
 //	0.5.1	31-MAR-2019		CamelCase corrections to movie2/id.c
 //							-g option made mandatory again
