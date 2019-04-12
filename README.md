@@ -18,7 +18,7 @@ No other game is supported.
 More, for all these games, only a limited number of files are supported:
 
 - the *GAME\*.SAVEGAMEDATA* and *DLC\*.SAVEGAMEDATA* inside the *SLOT\** folders. These files do not hold everything about a saved game but hold most progress information.
-- for Lego Worlds, CONTENT/S[1-4]-SYSGLOBAL/2500304796/QL/AUTOSAVE.GAMESAVE can be dumped but not modified. If you wonder, 2500304796 is the decimal for 0x95079f9c which is the FNV hash for *"QuestLogs"*.
+- for Lego Worlds, CONTENT/S[1-4]-SYSGLOBAL/2500304796/QL/AUTOSAVE.GAMESAVE can be dumped but not modified. If you wonder, 2500304796 is the decimal for 0x95079f9c which is the FNV1UpperCase hash for *"QuestLogs"*.
 
 This tool exists because most recent LEGO games store saved games in a similar way, heavily relying on FNV hashs (see *About Lego's FNV hash.md*)
 
