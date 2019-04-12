@@ -3,6 +3,7 @@
 // There are many more spelling errors than usual. Of course, they can't be corrected (hash mismatch…)
 
 /*
+	12-APR-2019		Updated some CamelCases
 	12-APR-2019		Added DLC1 hashes
 */
 
@@ -2548,7 +2549,7 @@
 { 0xfb75987a, gameMovie2, 0x427dc92a, 0x0, "GoldWorld_GW_FP_BennyGold_Empty", "", NULL },
 { 0xe1ced0f7, gameMovie2, 0x427dc92a, 0x0, "GoldWorld_GW_FP_RexGold_Empty", "", NULL },
 { 0xad5f3a79, gameMovie2, 0x427dc92a, 0x0, "GoldWorld_GW_FP_MayhemGold_Empty", "", NULL },
-{ 0xcbeb5b9b, gameMovie2, 0x427dc92a, 0x0, "GoldWorld_GW_FP_MetalbeardGold_Empty", "", NULL },
+{ 0xcbeb5b9b, gameMovie2, 0x427dc92a, 0x0, "GoldWorld_GW_FP_MetalBeardGold_Empty", "", NULL },
 { 0xeabfc619, gameMovie2, 0x427dc92a, 0x0, "GoldWorld_GW_FP_BatmanGold_Empty", "", NULL },
 { 0x8fdbe186, gameMovie2, 0x427dc92a, 0x0, "GoldWorld_GW_FP_EmmetGold_Empty", "", NULL },
 { 0x7d6d7575, gameMovie2, 0x427dc92a, 0x0, "GoldWorld_GW_FP_UnikittyGold_Empty", "", NULL },
@@ -2963,7 +2964,7 @@
 { 0x9d437522, gameMovie2, 0x427dc92a, 0x0, "Citadel_Citadel_FP09A_WheresMyPantsGuy_Flow", "", NULL },
 { 0xf306a517, gameMovie2, 0x427dc92a, 0x0, "Citadel_Citadel_FP08A_FemaleFlameHelmet_Outro", "", NULL },
 { 0x0b4cd89a, gameMovie2, 0x427dc92a, 0x0, "Citadel_Citadel_SQ04A_WheresMyPantsGuy_Minicut", "", NULL },
-{ 0x39f9041c, gameMovie2, 0x427dc92a, 0x0, "Citadel_Citadel_SQ06C_Metalbeard_Prop", "", NULL },
+{ 0x39f9041c, gameMovie2, 0x427dc92a, 0x0, "Citadel_Citadel_SQ06C_MetalBeard_Prop", "", NULL },
 { 0x5af42da6, gameMovie2, 0x427dc92a, 0x0, "Citadel_Citadel_SQ07C_Unikitty_Flow", "", NULL },
 { 0x4d22d924, gameMovie2, 0x427dc92a, 0x0, "Citadel_Citadel_FP02B_FemaleHeadbandEyepatch_Race", "", NULL },
 { 0x66ee355c, gameMovie2, 0x427dc92a, 0x0, "Citadel_Citadel_SQ04A.5_WheresMyPantsGuy_Flow", "", NULL },
@@ -3009,7 +3010,7 @@
 { 0x9d8ddbd2, gameMovie2, 0x427dc92a, 0x0, "Hub_Hub_SQ01A_ShopKeeper_Prop", "", NULL },
 { 0x1e6bcd7e, gameMovie2, 0x427dc92a, 0x0, "Hub_SB_FP_BatmanClassic_Vehicle", "", NULL },
 { 0x508d42af, gameMovie2, 0x427dc92a, 0x0, "Hub_SB_FP_Benny_Photo", "", NULL },
-{ 0x0f07f859, gameMovie2, 0x427dc92a, 0x0, "Hub_SB_Metalbeard_Fetch", "", NULL },
+{ 0x0f07f859, gameMovie2, 0x427dc92a, 0x0, "Hub_SB_MetalBeard_Fetch", "", NULL },
 { 0x39b9986a, gameMovie2, 0x427dc92a, 0x0, "Hub_SB_Queen_Costume", "", NULL },
 { 0xe33e0294, gameMovie2, 0x427dc92a, 0x0, "Hub_SB_FP_Unikitty_Defend", "", NULL },
 { 0x17a1cff0, gameMovie2, 0x427dc92a, 0x0, "Hub_SB_FP_AbeLincoln_Vehicle", "", NULL },
@@ -3861,7 +3862,7 @@
 { 0x58959a41, gameMovie2, 0x646f2cd1, 0x0, "Hub_Hub_SQ01A_ShopKeeper_PropGB", "", NULL },
 { 0xec20f4e5, gameMovie2, 0x646f2cd1, 0x0, "Hub_SB_FP_BatmanClassic_VehicleGB", "", NULL },
 { 0x9815560c, gameMovie2, 0x646f2cd1, 0x0, "Hub_SB_FP_Benny_PhotoGB", "", NULL },
-{ 0x5e51ac96, gameMovie2, 0x646f2cd1, 0x0, "Hub_SB_Metalbeard_FetchGB", "", NULL },
+{ 0x5e51ac96, gameMovie2, 0x646f2cd1, 0x0, "Hub_SB_MetalBeard_FetchGB", "", NULL },
 { 0xc7959a99, gameMovie2, 0x646f2cd1, 0x0, "Hub_SB_Queen_CostumeGB", "", NULL },
 { 0x7dd13023, gameMovie2, 0x646f2cd1, 0x0, "Hub_SB_FP_Unikitty_DefendGB", "", NULL },
 { 0xd5564ff7, gameMovie2, 0x646f2cd1, 0x0, "Hub_SB_FP_AbeLincoln_VehicleGB", "", NULL },
@@ -4291,10 +4292,10 @@
 { 0xaca5fe67, gameMovie2, 0x774d4f35, 0x0, "Unikitty_Puppycorn", "", NULL },
 { 0x13065b2c, gameMovie2, 0x774d4f35, 0x0, "Unikitty_Seasick", "", NULL },
 { 0x72047b7f, gameMovie2, 0x774d4f35, 0x0, "Unikitty_Systyrian", "", NULL },
-{ 0x371e7ee6, gameMovie2, 0x774d4f35, 0x0, "Metalbeard_Chest", "", NULL },
-{ 0x068d0257, gameMovie2, 0x774d4f35, 0x0, "Metalbeard_Chest_Gold", "", NULL },
-{ 0x0153fbeb, gameMovie2, 0x774d4f35, 0x0, "Metalbeard_Chest_Systyrian", "", NULL },
-{ 0x1742e209, gameMovie2, 0x774d4f35, 0x0, "Metalbeard_Chest_Iridescent", "", NULL },
+{ 0x371e7ee6, gameMovie2, 0x774d4f35, 0x0, "MetalBeard_Chest", "", NULL },
+{ 0x068d0257, gameMovie2, 0x774d4f35, 0x0, "MetalBeard_Chest_Gold", "", NULL },
+{ 0x0153fbeb, gameMovie2, 0x774d4f35, 0x0, "MetalBeard_Chest_Systyrian", "", NULL },
+{ 0x1742e209, gameMovie2, 0x774d4f35, 0x0, "MetalBeard_Chest_Iridescent", "", NULL },
 { 0xaa4253aa, gameMovie2, 0x774d4f35, 0x0, "Unikitty_Classic_NoSaddle", "", NULL },
 { 0x63865da2, gameMovie2, 0x774d4f35, 0x0, "Unikitty_Puppycorn_NoSaddle", "", NULL },
 { 0x2c7796fd, gameMovie2, 0x774d4f35, 0x0, "King_Gold", "", NULL },
@@ -4495,7 +4496,7 @@
 { 0xc5d58c7a, gameMovie2, 0xd4aad89e, 0x0, "HarmonyTown_WonderWomanSpawn", "", NULL },
 { 0x4f388100, gameMovie2, 0xd4aad89e, 0x0, "HarmonyTown_SupermanSpawn", "", NULL },
 { 0x3125a12a, gameMovie2, 0xd4aad89e, 0x0, "HarmonyTown_PartySys4Spawn", "", NULL },
-{ 0x47ee275d, gameMovie2, 0xd4aad89e, 0x0, "HarmonyTown_RemoveMetalbeard", "", NULL },
+{ 0x47ee275d, gameMovie2, 0xd4aad89e, 0x0, "HarmonyTown_RemoveMetalBeard", "", NULL },
 { 0x045f08cf, gameMovie2, 0xd4aad89e, 0x0, "Tutorial_QuestGiver", "", NULL },
 { 0xdef38179, gameMovie2, 0xd4aad89e, 0x0, "Tutorial_MasterPieces", "", NULL },
 { 0x63c0d3ba, gameMovie2, 0xd4aad89e, 0x0, "Tutorial_Shop", "", NULL },
@@ -4523,8 +4524,8 @@
 { 0x0e703ab9, gameMovie2, 0xd4aad89e, 0x0, "Citadel_GreenLantern", "", NULL },
 { 0x806452ca, gameMovie2, 0xd4aad89e, 0x0, "Citadel_Alfred", "", NULL },
 { 0x7e1954fd, gameMovie2, 0xd4aad89e, 0x0, "Citadel_Unikitty", "", NULL },
-{ 0xf2fb96a7, gameMovie2, 0xd4aad89e, 0x0, "Citadel_Metalbeard", "", NULL },
-{ 0x14b491da, gameMovie2, 0xd4aad89e, 0x0, "Citadel_MetalbeardEmpty", "", NULL },
+{ 0xf2fb96a7, gameMovie2, 0xd4aad89e, 0x0, "Citadel_MetalBeard", "", NULL },
+{ 0x14b491da, gameMovie2, 0xd4aad89e, 0x0, "Citadel_MetalBeardEmpty", "", NULL },
 { 0x33544229, gameMovie2, 0xd4aad89e, 0x0, "Citadel_Batman", "", NULL },
 { 0x50309b5a, gameMovie2, 0xd4aad89e, 0x0, "Citadel_Benny", "", NULL },
 { 0xdbe01b8a, gameMovie2, 0xd4aad89e, 0x0, "Citadel_GBMBeacon", "", NULL },
@@ -4665,7 +4666,7 @@
 { 0x200ef113, gameMovie2, 0xd4aad89e, 0x0, "KeyItem_InstructionPage", "", NULL },
 { 0x84a6f1e8, gameMovie2, 0xd4aad89e, 0x0, "KeyItem_Jetpack", "", NULL },
 { 0x136a3def, gameMovie2, 0xd4aad89e, 0x0, "KeyItem_MayhemTractorBeam", "", NULL },
-{ 0xe6f58df9, gameMovie2, 0xd4aad89e, 0x0, "KeyItem_MetalbeardHead", "", NULL },
+{ 0xe6f58df9, gameMovie2, 0xd4aad89e, 0x0, "KeyItem_MetalBeardHead", "", NULL },
 { 0xbad218e8, gameMovie2, 0xd4aad89e, 0x0, "KeyItem_PaintWand", "", NULL },
 { 0x5b4c653c, gameMovie2, 0xd4aad89e, 0x0, "KeyItem_PaintWandColors", "", NULL },
 { 0xe73e39c8, gameMovie2, 0xd4aad89e, 0x0, "KeyItem_PaintWandColourSwitch", "", NULL },
@@ -4731,7 +4732,7 @@
 
 // dlc1 Characters
 { 0xf58ac301, gameMovie2, 0x774d4f35, 0x0, "Emmet_Pyjamas", "", NULL },
-{ 0xe7154b59, gameMovie2, 0x774d4f35, 0x0, "Metalbeard_Classic_Minifig", "", NULL },
+{ 0xe7154b59, gameMovie2, 0x774d4f35, 0x0, "MetalBeard_Classic_Minifig", "", NULL },
 { 0x84e06ec5, gameMovie2, 0x774d4f35, 0x0, "Cleopatra_Classic", "", NULL },
 { 0x8764fdba, gameMovie2, 0x774d4f35, 0x0, "LordBusiness", "", NULL },
 { 0x213ce3ee, gameMovie2, 0x774d4f35, 0x0, "WilliamShakespeare", "", NULL },
