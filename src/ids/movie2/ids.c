@@ -2,6 +2,11 @@
 
 // There are many more spelling errors than usual. Of course, they can't be corrected (hash mismatch…)
 
+/*
+	12-APR-2019		Added DLC1 hashes
+*/
+
+
 // game1 LXFMLModels
 { 0x0c14c33c, gameMovie2, 0xd2485dc8, 0x0, "./Stuff/Terraform/LXFML/Models/Sandbox_Prefabs/DestroyedBuildings/Hide_Brown.lxfml", "", NULL },
 { 0x4de45ce7, gameMovie2, 0xd2485dc8, 0x0, "./Stuff/Terraform/LXFML/Models/Sandbox_Prefabs/DestroyedBuildings/Hide_Tower.lxfml", "", NULL },
@@ -1139,7 +1144,7 @@
 { 0xdeffb8d1, gameMovie2, 0xfe95a5e1, 0x0, "BuilderClassicBricksburg_Beach/BL_PalmTree_A_OPTM", "", NULL },
 { 0xccffd836, gameMovie2, 0xfe95a5e1, 0x0, "BuilderClassicBricksburg_Beach/BL_PastryStand_OPTM", "", NULL },
 { 0x38d6ff98, gameMovie2, 0xfe95a5e1, 0x0, "BuilderClassicBricksburg_Beach/BL_Lilo_A_Stand_OPTM", "", NULL },
-{ 0x45100c21, gameMovie2, 0xfe95a5e1, 0x0, "BuilderClassicBricksburg_Beach/bl_Lamppost_OPTM", "", NULL },
+{ 0x45100c21, gameMovie2, 0xfe95a5e1, 0x0, "BuilderClassicBricksburg_Beach/BL_Lamppost_OPTM", "", NULL },
 { 0xea9423eb, gameMovie2, 0xfe95a5e1, 0x0, "BuilderClassicBricksburg_Beach/BL_BirchTree_OPTM", "", NULL },
 { 0x203cf1b7, gameMovie2, 0xfe95a5e1, 0x0, "BuilderClassicBricksburg_Beach/BL_HatRack_OPTM", "", NULL },
 { 0x783aa6b1, gameMovie2, 0xfe95a5e1, 0x0, "BuilderClassicBricksburg_Beach/BL_Parasol_OPTM", "", NULL },
@@ -3000,7 +3005,7 @@
 { 0x2f07d24a, gameMovie2, 0x427dc92a, 0x0, "Hub_Hub_SBPT_03", "", NULL },
 { 0x2f07d24b, gameMovie2, 0x427dc92a, 0x0, "Hub_Hub_SBPT_02", "", NULL },
 { 0xb8b1a120, gameMovie2, 0x427dc92a, 0x0, "Hub_Hub_SQ03B_Gail_Flow_Intro", "", NULL },
-{ 0x492f4c46, gameMovie2, 0x427dc92a, 0x0, "Hub_Hub_SQ02A_Shopkeeper_BUILD_END", "", NULL },
+{ 0x492f4c46, gameMovie2, 0x427dc92a, 0x0, "Hub_Hub_SQ02A_Shopkeeper_Build_End", "", NULL },
 { 0x9d8ddbd2, gameMovie2, 0x427dc92a, 0x0, "Hub_Hub_SQ01A_ShopKeeper_Prop", "", NULL },
 { 0x1e6bcd7e, gameMovie2, 0x427dc92a, 0x0, "Hub_SB_FP_BatmanClassic_Vehicle", "", NULL },
 { 0x508d42af, gameMovie2, 0x427dc92a, 0x0, "Hub_SB_FP_Benny_Photo", "", NULL },
@@ -4723,3 +4728,11 @@
 { 0xda82a655, gameMovie2, 0xd4aad89e, 0x0, "DLC3_CP_Update", "", NULL },
 { 0xf8b7d990, gameMovie2, 0xd4aad89e, 0x0, "OldWest_GlxyChk", "", NULL },
 { 0x208b4f06, gameMovie2, 0xd4aad89e, 0x0, "ShowDLCMessage", "", NULL },
+
+// dlc1 Characters
+{ 0xf58ac301, gameMovie2, 0x774d4f35, 0x0, "Emmet_Pyjamas", "", NULL },
+{ 0xe7154b59, gameMovie2, 0x774d4f35, 0x0, "Metalbeard_Classic_Minifig", "", NULL },
+{ 0x84e06ec5, gameMovie2, 0x774d4f35, 0x0, "Cleopatra_Classic", "", NULL },
+{ 0x8764fdba, gameMovie2, 0x774d4f35, 0x0, "LordBusiness", "", NULL },
+{ 0x213ce3ee, gameMovie2, 0x774d4f35, 0x0, "WilliamShakespeare", "", NULL },
+{ 0x4c68b77f, gameMovie2, 0x774d4f35, 0x0, "Vitruvius_Young", "", NULL },
