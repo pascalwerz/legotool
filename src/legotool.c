@@ -25,13 +25,15 @@
 
 
 
-#define LEGOTOOL_VERSION "0.5.4"
-#define LEGOTOOL_DATE "12-APR-2019"
+#define LEGOTOOL_VERSION "0.5.5"
+#define LEGOTOOL_DATE "20-APR-2019"
 //
 //	** Version history: **
 //	Version	Date			Comment
 //
-//	0.5.4	12-APR-2019		Added Lego Movie 2 DLC1 ids
+//	0.5.5	19-APR-2019		Added Lego Movie 2 DLC2 (Galactic Adventures Character & Level Pack) ids
+//			19-APR-2019		Added Lego Movie 2 1.0.2 patch added ids
+//	0.5.4	12-APR-2019		Added Lego Movie 2 DLC1 (The Prophecy Pack) ids
 //  0.5.3	04-APR-2019		simplified yet made more adequate the separator line logic in dumpFormatted()
 //							stop truncating zap value to 32-bits. This allows setting Coins to more than 0xffffffff (4294967295)
 //							corrected some movie2 ids CamelCases
@@ -730,7 +732,8 @@ for (loadDataAtEnd = 0; loadDataAtEnd == 0; )
 			{
 			printf("dataType: playTime block for avengers\n");
 			printf("dataSize %ju (0x%jx)\n", context.dataSize, context.dataSize);
-			printf("unknown: 0x%08jx, playTime: %juh %jum %fs\n", context.unknown1, context.playTimeHour, context.playTimeMinute, context.playTimeSecond);
+			printf("unknown 0x%08jx\n", context.unknown1);
+			printf("playTime %juh %jum %fs\n", context.playTimeHour, context.playTimeMinute, context.playTimeSecond);
 			printf("(%ju bytes not dumped)\n", context.dataSize - 4 - 4 - 4);
 			printf("\n");
 			}
@@ -801,7 +804,8 @@ for (loadDataAtEnd = 0; loadDataAtEnd == 0; )
 			{
 			printf("dataType: %s\n", textForID(&context, context.dataType, "0x%08jx"));
 			printf("dataSize %ju (0x%jx)\n", context.dataSize, context.dataSize);
-			printf("unknown: 0x%08jx, playTime: %juh %jum %fs\n", context.unknown1, context.playTimeHour, context.playTimeMinute, context.playTimeSecond);
+			printf("unknown 0x%08jx\n", context.unknown1);
+			printf("playTime %juh %jum %fs\n", context.playTimeHour, context.playTimeMinute, context.playTimeSecond);
 			printf("saveItemCount: %jd\n", context.saveItemCount);
 			printf("\n");
 			if (forEachSaveItemWithID(&context, dumpSaveItem, 0, context.willDumpSaveItemID) == INVALID_DATA) { fprintf(stderr, "error: file format not as expected.\n"); exit(1); }
