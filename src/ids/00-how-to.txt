@@ -77,7 +77,7 @@ cat csvfiles.txt | while read FILE; do bbedit "$FILE"; done
 # beware, some will need to have their first column removed
 # remove leading spaces, replace '^[ \t]+' with ''
 # beware of INVALID characters especially in TEXT.CSV (replace '[\x00-\x09\x0b-\x1f]+' with '')
-# beware of INVALID lines especially in TEXT.CSV (replace '(^[^"].*\n)+' with '')
+# beware of INVALID lines especially in TEXT.CSV (search for '^[^"].*\n')
 # keep only first column (the label): replace pattern "^(.*?),.*$" with "\1"
 # remove prefix/suffix '"'
 # remove duplicates
@@ -97,7 +97,7 @@ bbedit textfiles.txt
 # save textfiles.txt
 # close textfiles.txt
 
-# this step is only required if file path are included as hash (e.g. lego worlds for .LXFML files). You may want to skip it otherwise
+# this step is only required if file path are included as hash (e.g. lego worlds/movie2 for .LXFML files). You may want to skip it otherwise
 # create files path file
 : > words/files/${GAME}.txt
 # get all files path, with both / and \ separators, with and without extension, with and without _DX## suffix
@@ -106,7 +106,7 @@ bbedit textfiles.txt
 # get all directories path with both / and \ separators, with and without trailing / and \, with and without extension, with and without DX## suffix
 (cd "$DATA"; for i in *; do (cd "$i"; find . -type d; find * -type d); done; ) | awk '{ printf("%s\n", $0); printf("%s/\n", $0); gsub("/", "\\"); printf("%s\n", $0); printf("%s\\\n", $0); }' | awk '{ print $0; n=split($0,w,"."); for (i=1;i<n-1; i++)printf("%s.",w[i]); printf("%s\n",w[n-1]) }' | awk '{ print $0; sub("[._]DX[0-9]*$", ""); print $0 }'| sort -fu >> words/files/${GAME}.txt
 (cd "$DATA"; for i in [dD][lL][cC]*; do (cd "$i"; find */*/. -type d); done)   | awk '{ printf("%s\n", $0); printf("%s/\n", $0); gsub("/", "\\"); printf("%s\n", $0); printf("%s\\\n", $0); }' | awk '{ print $0; n=split($0,w,"."); for (i=1;i<n-1; i++)printf("%s.",w[i]); printf("%s\n",w[n-1]) }' | awk '{ print $0; sub("[._]DX[0-9]*$", ""); print $0 }'| sort -fu >> words/files/${GAME}.txt
-# …/*.lxfml files may be found as …/cache/*.sav, act accordinly
+# …/*.lxfml files may be found as …/cache/*.sav, act accordingly
 bbedit words/files/${GAME}.txt
 "(^(.+)/cache/([^/]+)$)" to "\1\n\2/\3"
 "(^(.+)\\cache\\([^\\]+)$)" to "\1\n\2\\\3"
