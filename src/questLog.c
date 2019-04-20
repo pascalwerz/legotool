@@ -166,7 +166,7 @@ int parseQuestLog(context_t *context, uint8_t **dataPtr, uintmax_t *dataSize)
 					printf("%s.Default %s\n", textForID(context, quest, "0x%08jx"), textForID(context, questType, "0x%08jx"));
 					if (n >= 0)
 						{
-						// Quest encountered, big ! displayed
+						// Quest encountered, e.g. big ! displayed
 						printf("%s.Seen ", textForID(context, quest, "0x%08jx"));	// fake state
 						t = date1;
 						if (t && gmtime_r(&t, &tm))
@@ -182,7 +182,7 @@ int parseQuestLog(context_t *context, uint8_t **dataPtr, uintmax_t *dataSize)
 						}
 					if (n >= 1)
 						{
-						// Quest accepted, i.e. started by player
+						// Quest accepted, e.g. started by player
 						printf("%s.Played ", textForID(context, quest, "0x%08jx"));	// fake state
 						t = date2;
 						if (t && gmtime_r(&t, &tm))
