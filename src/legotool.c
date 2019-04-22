@@ -646,15 +646,21 @@ context.fileSize = context.mappedFile.size;
 context.loadVersion = get32(&context, 0x0);
 * (uint32_t *) &context.filePercentage = get32(&context, 0x8);
 context.fileModified = 0;
-if (context.shellVersion == 0)
-	context.loadOffset = 0x10;
-else
-if (context.shellVersion == 1)
-	context.loadOffset = 0x14;
-else
-	context.loadOffset = 0x18;
-context.loadSize = 0;	// will be updated with each load block
 
+switch(context.shellVersion)
+{
+case 0:
+	context.loadOffset = 0x10;
+	break;
+case 1:
+	context.loadOffset = 0x14;
+	break;
+case 2:
+	context.loadOffset = 0x18;
+	break;
+}
+
+context.loadSize = 0;	// will be updated with each load block
 
 if (context.game == gameWorlds && context.willDump && !strcasecmp(context.baseFileName, "autosave") && !strcasecmp(context.fileExtension, "gamesave"))
 	{
@@ -682,6 +688,7 @@ if (context.willDump && (!context.willDumpBaseFilename || !strcasecmp(context.wi
 		printf("dumped on: %s\n", dateString);
 		}
 	printf("game: %s\n", gameIdentificationToName(context.game));
+	printf("shellVersion: %2ju\n", context.shellVersion);
 	printf("loadVersion: %2ju\n", context.loadVersion);
 	printf("completion percentage (or discoveries count): %f\n", context.filePercentage);
 	printf("\n");
