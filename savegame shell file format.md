@@ -1,6 +1,33 @@
-Lego games file with *.savegamedata* extension share the same basic structure:
+Lego games file ending in *savegamedata* seem to share the same basic structure:
 
-Version 1, without loadSize: (Older games including Batman 3 and  Jurassic World)
+Version 0, without loadVersionChecksum nor loadSize: (*Movie 1*)
+
+|      | …0 …1 …2 …3 | …4 …5 …6 …7 |    …8 …9 …a …b     | …c …d …e …f  |
+| :--: | :---------: | :---------: | :----------------: | :----------: |
+|  0…  | loadVersion | percentage  | percentageChecksum | loadChecksum |
+|  1…  |      …      |             |                    |              |
+
+
+
+| **Offset**    | **Size**    | **Type** | **Name**           | **Comment**                                                  |
+| ------------- | ----------- | -------- | ------------------ | ------------------------------------------------------------ |
+| 0x00          | 4 bytes     | integer  | loadVersion        | load version                                                 |
+| 0x04          | 4 bytes     | float    | percentage         | completion percentage or, for Lego Worlds, discoveries count |
+| 0x08          | 4 bytes     | integer  | percentageChecksum | checksum of the four preceding bytes                         |
+| 0x0c          | 4 bytes     | integer  | loadChecksum       | checksum of the *loadSize* bytes starting at offset 0x14     |
+| 0x10          | loadSize    | free     | load               | load data. As there is no loadSize field in header, load data must be parsed to compute loadSize and checksum |
+| loadSize+0x10 | unspecified |          |                    | extraneous data allowed                                      |
+
+
+
+Version 1, without loadSize: (*Batman 3* and *Jurassic World*)
+
+|      | …0 …1 …2 …3  |     …4 …5 …6 …7     | …8 …9 …a …b |    …c …d …e …f     |
+| :--: | :----------: | :-----------------: | :---------: | :----------------: |
+|  0…  | loadVersion  | loadVersionChecksum | percentage  | percentageChecksum |
+|  1…  | loadChecksum |          …          |             |                    |
+
+
 
 | **Offset**    | **Size**    | **Type** | **Name**            | **Comment**                                                  |
 | ------------- | ----------- | -------- | ------------------- | ------------------------------------------------------------ |
@@ -15,6 +42,13 @@ Version 1, without loadSize: (Older games including Batman 3 and  Jurassic World
 
 
 Version 2, with loadSize:
+
+|      | …0 …1 …2 …3  |     …4 …5 …6 …7     | …8 …9 …a …b |    …c …d …e …f     |
+| :--: | :----------: | :-----------------: | :---------: | :----------------: |
+|  0…  | loadVersion  | loadVersionChecksum | percentage  | percentageChecksum |
+|  1…  | loadChecksum |      loadSize       |      …      |                    |
+
+
 
 | **Offset**    | **Size**    | **Type** | **Name**            | **Comment**                                                  |
 | ------------- | ----------- | -------- | ------------------- | ------------------------------------------------------------ |
