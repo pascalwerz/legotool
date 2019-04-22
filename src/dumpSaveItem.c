@@ -114,7 +114,7 @@ void dumpField(context_t *context, object_t *data, const char *valueFormat, int 
 			else
 				sprintf(tmp, valueFormat, objectPermanentValue(context, data));
 			}
-		printf("[\u2260 %s] ", tmp);
+		printf("[!= %s] ", tmp);
 		}
 
 	if (context->saveItemObjectVersion == objectVersion42244)

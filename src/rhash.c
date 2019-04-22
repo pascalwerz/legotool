@@ -372,7 +372,7 @@ while ((ch = getopt(argc, argv, "123sS:p:P:k:l:r:")) != -1)
 		break;
 	case 'P':
 		prefixSeed = strtoumax(optarg, NULL, 16);
-		prefixLabel = "\u2026";
+		prefixLabel = "...";
 		break;
 	case 'k':
 		compareMode = 1;
