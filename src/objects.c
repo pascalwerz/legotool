@@ -28,6 +28,8 @@ uintmax_t objectSize(context_t *context)
 {
 	switch(context->saveItemObjectVersion)
 		{
+	case objectVersion44:
+		return 0x08;
 	case objectVersion42244:
 		return 0x10;
 	case objectVersion488:
@@ -43,6 +45,8 @@ uint32_t objectObject(context_t *context, object_t *field)
 {
 	switch(context->saveItemObjectVersion)
 		{
+	case objectVersion44:
+		return read32(((uint8_t *)field) + 0x00, context->endianness);
 	case objectVersion42244:
 		return read32(((uint8_t *)field) + 0x00, context->endianness);
 	case objectVersion488:
@@ -58,6 +62,8 @@ uint32_t objectField(context_t *context, object_t *field)
 {
 	switch(context->saveItemObjectVersion)
 		{
+	case objectVersion44:
+		return context->defaultID; // fake fieldID
 	case objectVersion42244:
 		return context->defaultID; // fake fieldID
 	case objectVersion488:
@@ -73,14 +79,20 @@ uint16_t objectUnknownFlag(context_t *context, object_t *field)
 {
 	switch(context->saveItemObjectVersion)
 		{
+	case objectVersion44:
+		fprintf(stderr, "internal error: invalid operation for object version\n");
+		exit(1);
+		break;
 	case objectVersion42244:
 		return read16(((uint8_t *)field) + 0x04, context->endianness);
 	case objectVersion488:
 		fprintf(stderr, "internal error: invalid operation for object version\n");
 		exit(1);
+		break;
 	case objectVersion4488: default:
 		fprintf(stderr, "internal error: invalid operation for object version\n");
 		exit(1);
+		break;
 		}
 }
 
@@ -90,14 +102,20 @@ uint16_t objectCollectedFlag(context_t *context, object_t *field)
 {
 	switch(context->saveItemObjectVersion)
 		{
+	case objectVersion44:
+		fprintf(stderr, "internal error: invalid operation for object version\n");
+		exit(1);
+		break;
 	case objectVersion42244:
 		return read16(((uint8_t *)field) + 0x06, context->endianness);
 	case objectVersion488:
 		fprintf(stderr, "internal error: invalid operation for object version\n");
 		exit(1);
+		break;
 	case objectVersion4488: default:
 		fprintf(stderr, "internal error: invalid operation for object version\n");
 		exit(1);
+		break;
 		}
 }
 
@@ -107,6 +125,8 @@ uint64_t objectProbationalValue(context_t *context, object_t *field)
 {
 	switch(context->saveItemObjectVersion)
 		{
+	case objectVersion44:
+		return read32(((uint8_t *)field) + 0x04, context->endianness);
 	case objectVersion42244:
 		return read32(((uint8_t *)field) + 0x08, context->endianness);
 	case objectVersion488:
@@ -122,6 +142,8 @@ uint64_t objectPermanentValue(context_t *context, object_t *field)
 {
 	switch(context->saveItemObjectVersion)
 		{
+	case objectVersion44:
+		return read32(((uint8_t *)field) + 0x04, context->endianness);	// just return same as probational
 	case objectVersion42244:
 		return read32(((uint8_t *)field) + 0x0c, context->endianness);
 	case objectVersion488:
@@ -139,6 +161,9 @@ void setObjectObject(context_t *context, object_t *field, uint32_t objectID)
 
 	switch(context->saveItemObjectVersion)
 		{
+	case objectVersion44:
+		write32(((uint8_t *)field) + 0x00, context->endianness, objectID);
+		break;
 	case objectVersion42244:
 		write32(((uint8_t *)field) + 0x00, context->endianness, objectID);
 		break;
@@ -159,6 +184,10 @@ void setObjectField(context_t *context, object_t *field, uint32_t fieldID)
 
 	switch(context->saveItemObjectVersion)
 		{
+	case objectVersion44:
+		fprintf(stderr, "internal error: invalid operation for object version\n");
+		exit(1);
+		break;
 	case objectVersion42244:
 		fprintf(stderr, "internal error: invalid operation for object version\n");
 		exit(1);
@@ -181,6 +210,10 @@ void setObjectUnknownFlag(context_t *context, object_t *field, uint16_t value)
 
 	switch(context->saveItemObjectVersion)
 		{
+	case objectVersion44:
+		fprintf(stderr, "internal error: invalid operation for object version\n");
+		exit(1);
+		break;
 	case objectVersion42244:
 		write32(((uint8_t *)field) + 0x04, context->endianness, value);
 		break;
@@ -203,6 +236,10 @@ void setObjectCollectedFlag(context_t *context, object_t *field, uint16_t value)
 
 	switch(context->saveItemObjectVersion)
 		{
+	case objectVersion44:
+		fprintf(stderr, "internal error: invalid operation for object version\n");
+		exit(1);
+		break;
 	case objectVersion42244:
 		write32(((uint8_t *)field) + 0x06, context->endianness, value);
 		break;
@@ -225,6 +262,9 @@ void setObjectProbationalValue(context_t *context, object_t *field, uint64_t val
 
 	switch(context->saveItemObjectVersion)
 		{
+	case objectVersion44:
+		write32(((uint8_t *)field) + 0x04, context->endianness, value);
+		break;
 	case objectVersion42244:
 		write32(((uint8_t *)field) + 0x08, context->endianness, value);
 		break;
@@ -244,6 +284,9 @@ void setObjectPermanentValue(context_t *context, object_t *field, uint64_t value
 	context->fileModified++;
 	switch(context->saveItemObjectVersion)
 		{
+	case objectVersion44:
+		write32(((uint8_t *)field) + 0x04, context->endianness, value);	// same as probational
+		break;
 	case objectVersion42244:
 		write32(((uint8_t *)field) + 0x0c, context->endianness, value);
 		break;
@@ -281,6 +324,14 @@ uintmax_t forAllObjectsWithObjectIDAndFieldID(context_t *context, forAllFunction
 			{
 			switch (context->saveItemObjectVersion)
 				{
+			case objectVersion44:
+				if (fieldID == ID_WILDCARD) fieldID = context->defaultID; // * will match the fake Default field
+				if (objectField(context, field) == context->defaultID)
+					{
+					result = f(context, field, fieldID, userData);
+					if (result) return result;
+					}
+				break;
 			case objectVersion42244:
 				if (fieldID == ID_WILDCARD) fieldID = context->defaultID; // * will match the fake Default field
 				if (objectField(context, field) == context->defaultID || objectField(context, field) == context->unknownFlagID || objectField(context, field) == context->collectedFlagID)
@@ -385,6 +436,11 @@ void setObjectValue(context_t *context, object_t *field, uintmax_t fieldID, uint
 {
 			switch (context->saveItemObjectVersion)
 				{
+			case objectVersion44:
+				if (fieldID == context->defaultID)
+					{
+					setObjectProbationalValue(context, field, value);	// Permanent is same as Probational
+					}
 			case objectVersion42244:
 				if (fieldID == context->defaultID)
 					{

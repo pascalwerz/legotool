@@ -16,7 +16,6 @@ typedef enum
 	{
 	// non specific, hard-coded values required.
 	gameAny          = -1,
-	gameNotDefined   = 0,
 	// game-specific.
 	gameBatman3,
 	gameJurassic,
@@ -27,6 +26,7 @@ typedef enum
 	gameIncredibles,
 	gameSuperHeroes2,
 	gameVillains,
+	gameMovie1,
 	gameMovie2,
 	} gameIdentification;
 

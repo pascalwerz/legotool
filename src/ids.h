@@ -14,7 +14,7 @@ extern uintmax_t globalKnownIDsCount;
 
 // mapping related
 int hashCompareFunction(const void *h1, const void *h2);
-mapping *keyFind(context_t *context, uintmax_t key, uintmax_t fileVersion, uintmax_t saveItemID);
+mapping *keyFind(context_t *context, uintmax_t key, uintmax_t loadVersion, uintmax_t saveItemID);
 
 
 

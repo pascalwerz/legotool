@@ -31,6 +31,7 @@
 //	** Version history: **
 //	Version	Date			Comment
 //
+//			22-APR-2019		added "The Lego Movie 1" support
 //	0.5.5	19-APR-2019		Added Lego Movie 2 DLC2 (Galactic Adventures Character & Level Pack) ids
 //			19-APR-2019		Added Lego Movie 2 1.0.2 patch added ids
 //	0.5.4	12-APR-2019		Added Lego Movie 2 DLC1 (The Prophecy Pack) ids
@@ -64,7 +65,7 @@
 //	0.2		27-OCT-2018		added "batman3", "jurassic", "forceawakens" support
 //							added -s option to legotool
 //							corrected load checksum computation
-//							mapping now use game instead of fileVersion
+//							mapping now use game instead of loadVersion
 //	0.1		16-OCT-2018		added verbose mode, baseFileName/ prefix in -Z (zap)
 //							corrected and completed avengers game01 dump
 //	0.0		10-OCT-2018		First somewhat polished version
@@ -81,47 +82,87 @@ void updateFileChecksums(context_t *context)
 {
 	uint32_t newChecksum;
 	uint32_t checksumOnFile;
+	uintmax_t checksumOffset;
 
 	if (context->fileSize < 0x14) return;	// invalid data
 
-	// 1 - fileVersion checksum
-	newChecksum = checksum(context->fileData + 0x00, sizeof(uint32_t));
-	checksumOnFile = get32(context, 0x04);
-	if (checksumOnFile != newChecksum)
-		{
-		context->fileModified++;
-		if (context->verbose >= 2)
-			printf("fileVersionChecksum: %s updated from 0x%08jx to 0x%08jx\n", context->baseFileName, (uintmax_t) checksumOnFile, (uintmax_t) newChecksum);
-		set32(context, 0x04, newChecksum);
-		}
-	else
-		if (context->verbose >= 2)
-			printf("fileVersionChecksum: %s up to date, 0x%08jx\n", context->baseFileName, (uintmax_t) checksumOnFile);
+	// 1 - loadVersion checksum
+	switch (context->shellVersion)
+	{
+	case 0:
+		// n/a
+		break;
+	case 1:
+		checksumOffset = 0x04;
+		break;
+	case 2:
+		checksumOffset = 0x04;
+		break;
+	}
+	if (context->shellVersion != 0)
+	{
+		newChecksum = checksum(context->fileData + 0x00, sizeof(uint32_t));
+		checksumOnFile = get32(context, 0x00 + checksumOffset);
+		if (checksumOnFile != newChecksum)
+			{
+			context->fileModified++;
+			if (context->verbose >= 2)
+				printf("loadVersionChecksum: %s updated from 0x%08jx to 0x%08jx\n", context->baseFileName, (uintmax_t) checksumOnFile, (uintmax_t) newChecksum);
+			set32(context, 0x00 + checksumOffset, newChecksum);
+			}
+		else
+			if (context->verbose >= 2)
+				printf("loadVersionChecksum: %s up to date, 0x%08jx\n", context->baseFileName, (uintmax_t) checksumOnFile);
+	}
 
 	// 2 - percentage checksum
+	switch (context->shellVersion)
+	{
+	case 0:
+		checksumOffset = 0x08;
+		break;
+	case 1:
+		checksumOffset = 0x0c;
+		break;
+	case 2:
+		checksumOffset = 0x0c;
+		break;
+	}
 	newChecksum = checksum(context->fileData + 0x08, sizeof(float));
-	checksumOnFile = get32(context, 0x0c);
+	checksumOnFile = get32(context, checksumOffset);
 	if (checksumOnFile != newChecksum)
 		{
 		context->fileModified++;
 		if (context->verbose >= 2)
 			printf("percentageChecksum:  %s updated from 0x%08jx to 0x%08jx\n", context->baseFileName, (uintmax_t) checksumOnFile, (uintmax_t) newChecksum);
-		set32(context, 0x0c, newChecksum);
+		set32(context, checksumOffset, newChecksum);
 		}
 	else
 		if (context->verbose >= 2)
 			printf("percentageChecksum:  %s up to date, 0x%08jx\n", context->baseFileName, (uintmax_t) checksumOnFile);
 
 	// 3 - load checksum
+	switch (context->shellVersion)
+	{
+	case 0:
+		checksumOffset = 0x0c;
+		break;
+	case 1:
+		checksumOffset = 0x10;
+		break;
+	case 2:
+		checksumOffset = 0x10;
+		break;
+	}
 	newChecksum = context->loadChecksumComputed;
-	checksumOnFile = get32(context, 0x10);
+	checksumOnFile = get32(context, checksumOffset);
 
 	if (checksumOnFile != newChecksum)
 		{
 		context->fileModified++;
 		if (context->verbose >= 2)
 			printf("loadChecksum:        %s updated from 0x%08jx to 0x%08jx\n", context->baseFileName, (uintmax_t) checksumOnFile, (uintmax_t) newChecksum);
-		set32(context, 0x10, newChecksum);
+		set32(context, checksumOffset, newChecksum);
 		}
 	else
 		if (context->verbose >= 2)
@@ -303,7 +344,10 @@ fprintf(stderr, "                               incredibles     for Lego The Inc
 fprintf(stderr, "                               superheroes2    for Lego Marvel Super Heroes 2\n");
 fprintf(stderr, "                                               also: sh2\n");
 fprintf(stderr, "                               villains        for Lego DC Super-Villains\n");
+fprintf(stderr, "                               movie1          for The Lego Movie\n");
+fprintf(stderr, "                                               also: m1\n");
 fprintf(stderr, "                               movie2          for The Lego Movie 2\n");
+fprintf(stderr, "                                               also: m2\n");
 fprintf(stderr, "       -i quantity         update LEGO Worlds items that are unlocked and present in 2+ quantity to given quantity\n");
 fprintf(stderr, "                           Depleted items are updated as one item availabe\n");
 fprintf(stderr, "                           Updated items will be marked by a star\n");
@@ -361,13 +405,14 @@ int ch;
 int loadDataAtEnd;
 int splitResult;
 intmax_t i, j, k, l;
+uintmax_t readChecksum;
 
 assert(sizeof(uintmax_t) > sizeof(uint32_t));
 // setup context
 context.myPath = argv[0];
 context.knownIDs = globalKnownIDs;
 context.knownIDsCount = globalKnownIDsCount;
-context.game = gameNotDefined;
+context.game = gameAny;
 
 context.defaultID               = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Default");
 context.unknownFlagID           = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Unknown");
@@ -387,7 +432,7 @@ context.filePercentage = 0;
 context.fileData = NULL;
 context.fileSize = 0;
 context.dataOffset = 0;
-context.fileVersion = 0;
+context.loadVersion = 0;
 context.saveItemCount = 0;
 
 context.saveItemOffset = 0;
@@ -458,7 +503,7 @@ while ((ch = getopt(argc, argv, "%:ABCc:dD:E:g:i:I:knNsSvVx:zZ:?")) != -1)
 		break;
 	case 'g':
 		context.game = nameToGameIdentification(optarg);
-		if (context.game == gameNotDefined)
+		if (context.game == gameAny)
 			{
 			fprintf(stderr, "error: %s is not a valid game name.\n", optarg);
 			exit(1);
@@ -532,7 +577,7 @@ if (argc != 1) usage(&context, 1);				// otherwise, require a single file name
 
 // file operations
 
-if (context.game == gameNotDefined)
+if (context.game == gameAny)
 	{
 	fprintf(stderr, "error: you must use -g gameName\n");
 	exit(1);
@@ -541,6 +586,9 @@ if (context.game == gameNotDefined)
 // set up context.shellVersion according to game
 switch (context.game)
 	{
+case gameMovie1:
+	context.shellVersion = 0;	// without loadVersionChecksum nor loadSize
+	break;
 case gameBatman3:
 case gameJurassic:
 	context.shellVersion = 1;	// without loadSize
@@ -595,9 +643,12 @@ context.baseFileName[k] = 0;
 context.fileData = mapFileAtPath(context.fileName, &context.mappedFile, MAPPEDFILE_RDWR);
 if (context.fileData == NULL) { perror(context.fileName); exit(2); }
 context.fileSize = context.mappedFile.size;
-context.fileVersion = get32(&context, 0x0);
+context.loadVersion = get32(&context, 0x0);
 * (uint32_t *) &context.filePercentage = get32(&context, 0x8);
 context.fileModified = 0;
+if (context.shellVersion == 0)
+	context.loadOffset = 0x10;
+else
 if (context.shellVersion == 1)
 	context.loadOffset = 0x14;
 else
@@ -631,7 +682,7 @@ if (context.willDump && (!context.willDumpBaseFilename || !strcasecmp(context.wi
 		printf("dumped on: %s\n", dateString);
 		}
 	printf("game: %s\n", gameIdentificationToName(context.game));
-	printf("fileVersion: %2ju\n", context.fileVersion);
+	printf("loadVersion: %2ju\n", context.loadVersion);
 	printf("completion percentage (or discoveries count): %f\n", context.filePercentage);
 	printf("\n");
 	}
@@ -642,6 +693,10 @@ if (context.willUpdatePercentage) setPercentage(&context, context.willUpdatePerc
 // now loop over all game file load blocks
 switch (context.shellVersion)
 	{
+case 0:
+	context.loadChecksumComputed = 0xffffffff;
+	context.dataOffset = 0x10;
+	break;
 case 1:
 	context.loadChecksumComputed = 0xffffffff;
 	context.dataOffset = 0x14;
@@ -676,7 +731,24 @@ for (loadDataAtEnd = 0; loadDataAtEnd == 0; )
 	//   - dump block if needed
 	context.dataSize = 0;
 
-	if ((context.shellVersion == 1) && (get32(&context, context.dataOffset + 0x00) == context.endMarkerID))
+	if ((context.shellVersion == 0) && (get32(&context, context.dataOffset + 0x00) == context.endMarkerID))
+		{	// shellVersion 0 endMarker
+		loadDataAtEnd = 1;
+		if (context.game == gameMovie1)
+			context.dataSize = sizeof(uint32_t) + 0x426;			// movie1
+		else
+			context.dataSize = sizeof(uint32_t);
+
+		if (context.willDump && (!context.willDumpBaseFilename || !strcasecmp(context.willDumpBaseFilename, context.baseFileName)))
+			{
+			printf("dataType: end marker\n");
+			printf("dataSize: %ju (0x%jx)\n", context.dataSize, context.dataSize);
+			}
+
+//		printf("checksum offset 0x%jx length 0x%jx end 0x%jx\n", context.dataOffset, context.dataSize, context.dataOffset + context.dataSize); //***********
+		context.loadChecksumComputed = FNV1DataHash32(context.loadChecksumComputed, context.fileData + context.dataOffset, context.dataSize);
+		}
+	else if ((context.shellVersion == 1) && (get32(&context, context.dataOffset + 0x00) == context.endMarkerID))
 		{	// shellVersion 1 endMarker
 		loadDataAtEnd = 1;
 		if (context.game == gameBatman3 && !strncmp(context.baseFileName, "dlc", 3))
@@ -770,6 +842,22 @@ for (loadDataAtEnd = 0; loadDataAtEnd == 0; )
 			printf("\n");
 			}
 		}
+	else if ((context.shellVersion == 0) && (context.game == gameMovie1) && (get32(&context, context.dataOffset + 0x08) != context.cLoadSaveManager_DataID))
+		{	// movie1 additional block
+		loadDataAtEnd = 0;
+		context.dataSize = 0xced8;
+
+//		printf("checksum offset 0x%jx length 0x%jx end 0x%jx\n", context.dataOffset, context.dataSize, context.dataOffset + context.dataSize); //***********
+		context.loadChecksumComputed = FNV1DataHash32(context.loadChecksumComputed, context.fileData + context.dataOffset, context.dataSize);
+
+		if (context.willDump && (!context.willDumpBaseFilename || !strcasecmp(context.willDumpBaseFilename, context.baseFileName)))
+			{
+			printf("dataType: non-saveItem block for movie1\n");
+			printf("dataSize %ju (0x%jx)\n", context.dataSize, context.dataSize);
+			printf("(not dumped)\n");
+			printf("\n");
+			}
+		}
 	else if (get32(&context, context.dataOffset + 0x08) == context.cLoadSaveManager_DataID)
 		{	// 'standard' saveItem block
 		loadDataAtEnd = 0;
@@ -823,9 +911,21 @@ for (loadDataAtEnd = 0; loadDataAtEnd == 0; )
 	}
 
 context.loadChecksumComputed = context.loadChecksumComputed ^ 0xffffffff;
-if (!context.fileModified && context.loadChecksumComputed != get32(&context, 0x10))
+
+switch (context.shellVersion)
+{
+case 0:
+	readChecksum = get32(&context, 0x0c);
+	break;
+case 1:
+case 2:
+	readChecksum = get32(&context, 0x10);
+	break;
+}
+
+if (!context.fileModified && context.loadChecksumComputed != readChecksum)
 	{
-	printf("warning: computed load checksum mismatch, computed 0x%08jx, file 0x%08jx\n", context.loadChecksumComputed, (uintmax_t) get32(&context, 0x10));
+	printf("warning: computed load checksum mismatch, computed 0x%08jx, file 0x%08jx\n", context.loadChecksumComputed, readChecksum);
 	}
 
 if (context.willRecomputeChecksums || context.fileModified)

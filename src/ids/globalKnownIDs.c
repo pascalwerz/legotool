@@ -27,6 +27,7 @@ mapping globalKnownIDs[] =	// Known IDs are in included files. Much easier to ma
 #include "incredibles/ids.c"
 #include "superheroes2/ids.c"
 #include "villains/ids.c"
+#include "movie1/ids.c"
 #include "movie2/ids.c"
 	};
 

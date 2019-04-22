@@ -9,6 +9,7 @@
 
 typedef enum
 	{
+	objectVersion44,
 	objectVersion42244,
 	objectVersion488,
 	objectVersion4488,

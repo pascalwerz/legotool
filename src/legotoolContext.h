@@ -44,7 +44,7 @@ typedef struct _context_t
 	uint8_t *fileData;			// for current file
 	uintmax_t shellVersion;		// for current file. This is a personal numbering, nothing official.
 	uintmax_t fileSize;			// for current file
-	uintmax_t fileVersion;		// for current file
+	uintmax_t loadVersion;		// for current file
 	float filePercentage;		// for current file
 	uintmax_t loadOffset;		// for current file
 	uintmax_t loadSize;			// for current file

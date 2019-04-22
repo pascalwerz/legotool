@@ -1,6 +1,8 @@
 /* this file is part of legotool, by xvi */
 
 // all known saveItems ids
+{ 0x398a3660, gameAny, -1, 0x0, "cCheckPointManagerSaveLoad", "", NULL },
+{ 0x4d79fb3b, gameAny, -1, 0x0, "cCheckpointMidAreaManagerSaveLoad", "", NULL },
 { 0x10ca236c, gameAny, -1, 0x0, "Achievements_DLC1", "", NULL },
 { 0x5081eb33, gameAny, -1, 0x0, "Achievements_Main", "", NULL },
 { 0xd9c8511c, gameAny, -1, 0x0, "AmberBricks", "", NULL },

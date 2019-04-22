@@ -31,6 +31,8 @@ uintmax_t saveItemBricks;
 uintmax_t saveItemBridgeLevels;
 uintmax_t saveItemBuildBricks;
 uintmax_t saveItemCarbonite;
+uintmax_t saveItemcCheckpointManagerSaveLoad;
+uintmax_t saveItemcCheckpointMidAreaManagerSaveLoad;
 uintmax_t saveItemCellTypes;
 uintmax_t saveItemChallengeGoal;
 uintmax_t saveItemCharacters;
