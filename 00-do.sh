@@ -58,7 +58,7 @@ do
     exit 1
   fi
 
-  (find "$DIR" -iname 'game*.savegamedata' | sort; find "$DIR" -iname 'dlc*.savegamedata' | sort) | while read FILE
+  (find "$DIR" -iname 'game*savegamedata' | sort; find "$DIR" -iname 'dlc*savegamedata' | sort) | while read FILE
   do
     "$MYDIR/legotool" $OPTIONS "$FILE"
   done
