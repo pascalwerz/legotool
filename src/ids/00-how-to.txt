@@ -76,9 +76,10 @@ cat csvfiles.txt | while read FILE; do bbedit "$FILE"; done
 # copy/append useful content line to a new file
 # beware, some will need to have their first column removed
 # remove leading spaces, replace '^[ \t]+' with ''
+# remove empty lines, replace '\n+' with '\n'
 # beware of INVALID characters especially in TEXT.CSV (replace '[\x00-\x09\x0b-\x1f]+' with '')
-# beware of INVALID lines especially in TEXT.CSV (search for '^[^"].*\n')
-# keep only first column (the label): replace pattern "^(.*?),.*$" with "\1"
+# beware of INVALID lines especially in TEXT.CSV (search for '^([^"].*\n)+')
+# keep only first column (the label): replace pattern "(.*?),.*$" with "\1"
 # remove prefix/suffix '"'
 # remove duplicates
 # append to words/${GAME}.txt
@@ -91,7 +92,7 @@ bbedit words/${GAME}.txt
 find "$DATA" -type f \(  -iname '*.addtool' -o -iname '*.cfg' -o -iname '*.json' -o -iname '*.sf' -o -iname '*.sub' -o -iname '*.prp' -o -iname '*.txt' -o -iname '*.txc' -o -iname '*.xml' \) > textfiles.txt
 
 # remove non-text file candidates
-cat textfiles.txt | while read FILE; do file "$FILE" ; done | grep -v "ASCII text" | grep -v ": UTF-8 Unicode" | bbedit
+cat textfiles.txt | while read FILE; do file "$FILE" ; done | grep -v "ASCII text" | grep -v ": UTF-8 Unicode" | grep -v ": ISO-8859 text" | bbedit
 # verify listed files, if any, remove them from textfiles.txt if needed or if they contains really useless text
 bbedit textfiles.txt
 # save textfiles.txt
@@ -148,8 +149,8 @@ cat /tmp/csvfiles.txt | while read FILE; do cat "$FILE"; echo; done | while read
 # dismiss original bbedit text document
 # replace pattern '^[0-9a-f]+ +db         "' with ''
 # replace pattern '", 0.*$' with ''
-# remove duplicates
 # replace pattern '%s' with '\n'
+# remove duplicates
 # remove lines containing pattern '["%@&:?]'
 # append to words/${GAME}.txt
 bbedit words/${GAME}.txt
@@ -171,8 +172,11 @@ bbedit dictionary.txt
 
 # you may want to append a generic words list to dictionary.txt (but this will make reverse looking hashes longer)
 #    cat /some/other/generic/words/file >> dictionary.txt
-#    remove duplicates in dictionary.txt
 
+# remove duplicates in dictionary.txt
+bbedit dictionary.txt
+# save dictionary.txt
+# close dictionary.txt
 # generate dictionary.c needed for rhash.
 cat dictionary.txt | sed -e's:\\:\\\\:g' -e's:":\\":g' | awk '{ printf("%s%c", $0, 0); }' | xargs -0 -n500 ./hash - > dictionary.c
 
