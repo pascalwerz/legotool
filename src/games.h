@@ -17,17 +17,18 @@ typedef enum
 	// non specific, hard-coded values required.
 	gameAny          = -1,
 	// game-specific.
-	gameBatman3,
-	gameJurassic,
 	gameAvengers,
+	gameBatman3,
 	gameForceAwakens,
-	gameWorlds,
-	gameNinjago,
+	gameHobbit,
 	gameIncredibles,
-	gameSuperHeroes2,
-	gameVillains,
+	gameJurassic,
 	gameMovie1,
 	gameMovie2,
+	gameNinjago,
+	gameSuperHeroes2,
+	gameVillains,
+	gameWorlds,
 	} gameIdentification;
 
 gameIdentification nameToGameIdentification(const char * name);
