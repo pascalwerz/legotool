@@ -11,7 +11,7 @@ Here are my command line tools to analyse and modify saved game files for follow
 - Lego The Incredibles
 - Lego Marvel Super Heroes 2
 - Lego DC Super-Villains
-- The Lego Movie
+- The Lego Movie (partial support)
 
 - The Lego Movie 2
 

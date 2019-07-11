@@ -37,7 +37,7 @@ int parseQuestLog(context_t *context, uint8_t **dataPtr, uintmax_t *dataSize)
 	if (ctime_r(&t, timeString) != NULL)
 		{
 		while (timeString[strlen(timeString) - 1] == '\n')
-			timeString[strlen(timeString) - 1] = '0';
+			timeString[strlen(timeString) - 1] = '\0';
 		printf("dumped on: %s\n", timeString);
 		}
 	printf("game: %s\n", gameIdentificationToName(context->game));

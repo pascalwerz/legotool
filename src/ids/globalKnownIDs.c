@@ -18,17 +18,18 @@ mapping globalKnownIDs[] =	// Known IDs are in included files. Much easier to ma
 #include "01-common/questTypes.c"
 
 // games
-#include "batman3/ids.c"
-#include "jurassic/ids.c"
 #include "avengers/ids.c"
+#include "batman3/ids.c"
 #include "forceawakens/ids.c"
-#include "worlds/ids.c"
-#include "ninjago/ids.c"
+#include "hobbit/ids.c"
 #include "incredibles/ids.c"
-#include "superheroes2/ids.c"
-#include "villains/ids.c"
+#include "jurassic/ids.c"
 #include "movie1/ids.c"
 #include "movie2/ids.c"
+#include "ninjago/ids.c"
+#include "superheroes2/ids.c"
+#include "villains/ids.c"
+#include "worlds/ids.c"
 	};
 
 uintmax_t globalKnownIDsCount = sizeof(globalKnownIDs) / sizeof(*globalKnownIDs);

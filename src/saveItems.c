@@ -286,6 +286,17 @@ objectRule_t rules[] =
 	{ gameVillains,     &saveItemStoryComplete,                     objectVersion4488,  "X" },
 	{ gameVillains,     &saveItemTrueHero,                          objectVersion4488,  "X" },
 
+	{ gameHobbit,       &saveItemSchematic,                         objectVersion44,    "?" },	// strange looking, to be verified
+	{ gameHobbit,       &saveItemTreasure,                          objectVersion44,    "?" },	// strange looking, to be verified
+	{ gameHobbit,       &saveItemCustomiser,                        objectVersion44,    "?" },	// strange looking, to be verified
+	{ gameHobbit,       &saveItemLegoAchievements,                  objectVersion44,    "1" },
+	{ gameHobbit,       &saveItemAutoHintSaveLoadManager,           objectVersion44,    "4" },
+	{ gameHobbit,       &saveItemMechLootLoadSaveManager,           objectVersion44,    "d" },
+	{ gameHobbit,       &saveItemcCheckpointMidAreaManagerSaveLoad, objectVersion44,    "?" },
+	{ gameHobbit,       &saveItemcGlobalBrickPickupManager,         objectVersion44,    "?" },
+	{ gameHobbit,       &saveItemcHubMapSaveData,                   objectVersion44,    "?" },
+	{ gameHobbit,       &saveItemcCheckpointManagerSaveLoad,        objectVersion44,    "f" },
+
 	{ gameMovie1,       &saveItemAchievements_Main,                 objectVersion44,    "?" },
 	{ gameMovie1,       &saveItemcCheckpointManagerSaveLoad,        objectVersion44,    "f" },
 	{ gameMovie1,       &saveItemcCheckpointMidAreaManagerSaveLoad, objectVersion44,    "?" },
@@ -348,6 +359,7 @@ void saveItemInitialize(void)
 	saveItemcCheckpointManagerSaveLoad        = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "cCheckpointManagerSaveLoad");
 	saveItemcCheckpointMidAreaManagerSaveLoad = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "cCheckpointMidAreaManagerSaveLoad");
 	saveItemCellTypes                         = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "CellTypes");
+	saveItemcGlobalBrickPickupManager         = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "cGlobalBrickPickupManager");
 	saveItemChallengeGoal                     = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "ChallengeGoal");
 	saveItemCharacters                        = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Characters");
 	saveItemCharactersVariables               = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "CharactersVariables");
@@ -359,6 +371,7 @@ void saveItemInitialize(void)
 	saveItemCheckpointRace                    = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "CheckpointRace");
 	saveItemCheckpoints                       = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Checkpoints");
 	saveItemCheckpointsVariables              = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "CheckpointsVariables");
+	saveItemcHubMapSaveData                   = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "cHubMapSaveData");
 	saveItemCoins                             = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Coins");
 	saveItemCoinsVariables                    = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "CoinsVariables");
 	saveItemCollectablePadding                = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "CollectablePadding");
@@ -385,6 +398,7 @@ void saveItemInitialize(void)
 	saveItemLevelVisits                       = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "LevelVisits");
 	saveItemLXFMLModels                       = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "LXFMLModels");
 	saveItemMechHintsSaveManager              = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "MechHintsSaveManager");
+	saveItemMechLootLoadSaveManager           = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "MechLootLoadSaveManager");
 	saveItemMetrics                           = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Metrics");
 	saveItemMicroFighter                      = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "MicroFighter");
 	saveItemMinikits                          = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Minikits");
@@ -405,6 +419,7 @@ void saveItemInitialize(void)
 	saveItemSaturnQuest                       = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "SaturnQuest");
 	saveItemSaveStation                       = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "SaveStation");
 	saveItemScavenger                         = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Scavenger");
+	saveItemSchematic                         = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Schematic");
 	saveItemSpaceShooterSystem                = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "SpaceShooterSystem");
 	saveItemSpinjitzu                         = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Spinjitzu");
 	saveItemStickers                          = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Stickers");
@@ -416,6 +431,7 @@ void saveItemInitialize(void)
 	saveItemThemes                            = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Themes");
 	saveItemTraderBrick                       = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "TraderBrick");
 	saveItemTranslate                         = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Translate");
+	saveItemTreasure                          = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "Treasure");
 	saveItemTrueHero                          = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "TrueHero");
 	saveItemTrueHeroVariables                 = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "TrueHeroVariables");
 	saveItemVOCollectables                    = FNV1UppercaseStringHash32(FNV1_INITIAL_SEED_32, "VOCollectables");
@@ -461,9 +477,11 @@ uintmax_t forEachSaveItemWithID(context_t *context, forEachSaveItemFunction f, u
 			if (context->saveItemID1 == saveItemCustomiserSave)
 				context->saveItemDataSize = context->saveItemDataSize / 8000 * 8000;
 			else if (context->game == gameMovie1 && context->saveItemID1 == saveItemLegoAchievements)
-				context->saveItemDataSize = context->saveItemDataSize / 0x10 * 0x10; // unsure: specified size is 0x14 but really is 0x10
-			else if (context->game == gameMovie1 && context->saveItemID1 == 0x4d79fb3b) // movie1 to be completed
-				context->saveItemDataSize = context->saveItemDataSize / 0x11e * 0x11e; // unsure: specified size is 0x150 but really is 0x11e
+				context->saveItemDataSize = 0x10;	// unsure: specified size is 0x14 but really is 0x10
+			else if (context->game == gameMovie1 && context->saveItemID1 == saveItemcCheckpointMidAreaManagerSaveLoad)
+				context->saveItemDataSize = 0x11e;	// unsure: specified size is 0x150 but really is 0x11e
+			else if (context->game == gameHobbit && context->saveItemID1 == saveItemcCheckpointMidAreaManagerSaveLoad)
+				context->saveItemDataSize = 0x58;	// unsure: specified size is 0xb0 but really is 0x58
 
 			context->saveItemDataOffset = context->saveItemOffset + sizeof(uint32_t) + sizeof(uint32_t);
 			if (context->fileSize < (context->saveItemOffset + 0x0c + context->saveItemDataSize))

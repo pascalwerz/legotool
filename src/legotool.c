@@ -31,7 +31,8 @@
 //	** Version history: **
 //	Version	Date			Comment
 //
-//			22-APR-2019		added "The Lego Movie 1" support
+//			25-APR-2019		corrected dump date output
+//			22-APR-2019		added "The Lego Movie 1" partial support
 //	0.5.5	19-APR-2019		Added Lego Movie 2 DLC2 (Galactic Adventures Character & Level Pack) ids
 //			19-APR-2019		Added Lego Movie 2 1.0.2 patch added ids
 //	0.5.4	12-APR-2019		Added Lego Movie 2 DLC1 (The Prophecy Pack) ids
@@ -201,7 +202,11 @@ void printID(const mapping* id)
 printf("{ ");
 printf("0x%08jx", id->key);
 printf(", ");
-printf("%2jd", id->game);
+#if 0
+printf("%-16s", gameIdentificationToName(id->game));
+#else
+printf("%2ju", id->game);
+#endif
 printf(", ");
 if (((intmax_t) id->saveItemID) >= 0) printf("0x%08jx", id->saveItemID); else  printf("-%ju", -id->saveItemID);
 printf(", ");
@@ -590,6 +595,7 @@ case gameMovie1:
 	context.shellVersion = 0;	// without loadVersionChecksum nor loadSize
 	break;
 case gameBatman3:
+case gameHobbit:
 case gameJurassic:
 	context.shellVersion = 1;	// without loadSize
 	break;
@@ -684,7 +690,7 @@ if (context.willDump && (!context.willDumpBaseFilename || !strcasecmp(context.wi
 	if (ctime_r(&date, dateString) != NULL)
 		{
 		while (dateString[strlen(dateString) - 1] == '\n')
-			dateString[strlen(dateString) - 1] = '0';
+			dateString[strlen(dateString) - 1] = '\0';
 		printf("dumped on: %s\n", dateString);
 		}
 	printf("game: %s\n", gameIdentificationToName(context.game));
@@ -742,7 +748,7 @@ for (loadDataAtEnd = 0; loadDataAtEnd == 0; )
 		{	// shellVersion 0 endMarker
 		loadDataAtEnd = 1;
 		if (context.game == gameMovie1)
-			context.dataSize = sizeof(uint32_t) + 0x426;			// movie1
+			context.dataSize = sizeof(uint32_t) + 0x426;
 		else
 			context.dataSize = sizeof(uint32_t);
 
@@ -760,6 +766,8 @@ for (loadDataAtEnd = 0; loadDataAtEnd == 0; )
 		loadDataAtEnd = 1;
 		if (context.game == gameBatman3 && !strncmp(context.baseFileName, "dlc", 3))
 			context.dataSize = sizeof(uint32_t);			// batman3 && dlc*
+		else if (context.game == gameHobbit)
+			context.dataSize = sizeof(uint32_t) + 0x448;
 		else
 			context.dataSize = sizeof(uint32_t) + 0x400;	// game*
 
@@ -849,10 +857,26 @@ for (loadDataAtEnd = 0; loadDataAtEnd == 0; )
 			printf("\n");
 			}
 		}
-	else if ((context.shellVersion == 0) && (context.game == gameMovie1) && (get32(&context, context.dataOffset + 0x08) != context.cLoadSaveManager_DataID))
+	else if ((context.game == gameMovie1) && (get32(&context, context.dataOffset + 0x08) != context.cLoadSaveManager_DataID))
 		{	// movie1 additional block
 		loadDataAtEnd = 0;
 		context.dataSize = 0xced8;
+
+//		printf("checksum offset 0x%jx length 0x%jx end 0x%jx\n", context.dataOffset, context.dataSize, context.dataOffset + context.dataSize); //***********
+		context.loadChecksumComputed = FNV1DataHash32(context.loadChecksumComputed, context.fileData + context.dataOffset, context.dataSize);
+
+		if (context.willDump && (!context.willDumpBaseFilename || !strcasecmp(context.willDumpBaseFilename, context.baseFileName)))
+			{
+			printf("dataType: non-saveItem block for movie1\n");
+			printf("dataSize %ju (0x%jx)\n", context.dataSize, context.dataSize);
+			printf("(not dumped)\n");
+			printf("\n");
+			}
+		}
+	else if ((context.game == gameHobbit) && (get32(&context, context.dataOffset + 0x08) != context.cLoadSaveManager_DataID))
+		{	// hobbit additional block
+		loadDataAtEnd = 0;
+		context.dataSize = 0x1e370;
 
 //		printf("checksum offset 0x%jx length 0x%jx end 0x%jx\n", context.dataOffset, context.dataSize, context.dataOffset + context.dataSize); //***********
 		context.loadChecksumComputed = FNV1DataHash32(context.loadChecksumComputed, context.fileData + context.dataOffset, context.dataSize);
