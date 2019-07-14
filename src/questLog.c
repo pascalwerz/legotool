@@ -8,7 +8,7 @@
 
 
 
-// INCOMPLETE IMPLEMENTATION
+// INCOMPLETE IMPLEMENTATION: no file modification allowed
 
 int parseQuestLog(context_t *context, uint8_t **dataPtr, uintmax_t *dataSize)
 	{
@@ -41,7 +41,6 @@ int parseQuestLog(context_t *context, uint8_t **dataPtr, uintmax_t *dataSize)
 		printf("dumped on: %s\n", timeString);
 		}
 	printf("game: %s\n", gameIdentificationToName(context->game));
-	printf("\n");
 
 	while (*dataSize)
 		{
@@ -108,6 +107,35 @@ int parseQuestLog(context_t *context, uint8_t **dataPtr, uintmax_t *dataSize)
 				n = read32(*dataPtr, context->endianness);
 				*dataPtr += 4;
 				*dataSize -= 4;
+
+				if (n == 0)
+					{
+					printf("\n");
+					printf("// Encountered quests\n");
+					printf("\n");
+					printed = 0;
+					}
+				else if (n == 1)
+					{
+					printf("\n");
+					printf("// Unfinished quests\n");
+					printf("\n");
+					printed = 0;
+					}
+				else if (n == 2)
+					{
+					printf("\n");
+					printf("// Finished quests\n");
+					printf("\n");
+					printed = 0;
+					}
+				else
+					{
+					printf("\n");
+					printf("// Unknown state %ju quests\n", n);
+					printf("\n");
+					printed = 0;
+					}
 
 				if (*dataSize < 4)
 					return 1;
