@@ -108,40 +108,40 @@ int parseQuestLog(context_t *context, uint8_t **dataPtr, uintmax_t *dataSize)
 				*dataPtr += 4;
 				*dataSize -= 4;
 
+				if (*dataSize < 4)
+					return 1;
+				count2 = read32(*dataPtr, context->endianness);
+				*dataPtr += 4;
+				*dataSize -= 4;
+
 				if (n == 0)
 					{
 					printf("\n");
-					printf("// Encountered quests\n");
+					printf("// %ju encountered but not started quests\n", count2);
 					printf("\n");
 					printed = 0;
 					}
 				else if (n == 1)
 					{
 					printf("\n");
-					printf("// Unfinished quests\n");
+					printf("// %ju started but not completed quests\n", count2);
 					printf("\n");
 					printed = 0;
 					}
 				else if (n == 2)
 					{
 					printf("\n");
-					printf("// Finished quests\n");
+					printf("// %ju completed quests\n", count2);
 					printf("\n");
 					printed = 0;
 					}
 				else
 					{
 					printf("\n");
-					printf("// Unknown state %ju quests\n", n);
+					printf("// %ju unknown state %ju quests\n", count2, n);
 					printf("\n");
 					printed = 0;
 					}
-
-				if (*dataSize < 4)
-					return 1;
-				count2 = read32(*dataPtr, context->endianness);
-				*dataPtr += 4;
-				*dataSize -= 4;
 
 				for (uintmax_t j = 0; j < count2; j++)
 					{
