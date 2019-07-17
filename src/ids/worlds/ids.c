@@ -3425,6 +3425,7 @@
 { 0x5c13a36a, gameWorlds, 0xfe95a5e1, 0x0, "SeasonalProps/ConfectionaryStand", "", NULL },
 
 // QuestLogs CONTENT/S[1-4]]-SYSGLOBAL/2500304796/QL/AUTOSAVE.GAMESAVE (2500304796 is decimal for 0x7f34be55, the FNV1 hash of "QuestLogs")
+// Order in file depends on gameplay
 { 0xb6c320ef, gameAny, -1, 0x0, "1950Mechanic_PaintGarge", "", NULL },
 { 0x253698f4, gameAny, -1, 0x0, "1950Waitress_RepairDinerRoof", "", NULL },
 { 0x65998271, gameAny, -1, 0x0, "60076_Builder_A_CostumeQuest", "", NULL },

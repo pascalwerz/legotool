@@ -25,12 +25,13 @@
 
 
 
-#define LEGOTOOL_VERSION "0.5.5"
-#define LEGOTOOL_DATE "20-APR-2019"
+#define LEGOTOOL_VERSION "0.5.6"
+#define LEGOTOOL_DATE "18-JUL-2019"
 //
 //	** Version history: **
 //	Version	Date			Comment
 //
+//	0.5.6	18-JUL-2019		added Showcase Collection #2
 //			25-APR-2019		corrected dump date output
 //			22-APR-2019		added "The Lego Movie 1" partial support
 //	0.5.5	19-APR-2019		Added Lego Movie 2 DLC2 (Galactic Adventures Character & Level Pack) ids
